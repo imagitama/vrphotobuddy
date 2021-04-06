@@ -1,0 +1,48 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "load-local-config": "firebase functions:config:get > .runtimeconfig.json",
+    "killports": "npx kill-port 5000,8080,4000,9099,9000,8085",
+    "serve": "NODE_ENV=development GOOGLE_APPLICATION_CREDENTIALS=credentials.json IS_EMULATOR=true firebase emulators:start --import=./emulator-data --export-on-exit=./emulator-data",
+    "serve:functions": "NODE_ENV=development GOOGLE_APPLICATION_CREDENTIALS=credentials.json IS_EMULATOR=true firebase emulators:start --only functions --import=./emulator-data --export-on-exit=./emulator-data",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "deploy:notifications": " firebase deploy --only functions:notifyOnAssetAmended,functions:notifyOnAssetApproved,functions:notifyOnAssetDeleted,functions:notifyOnAssetNeedingApproval,functions:notifyOnCommentCreated",
+    "logs": "firebase functions:log",
+    "prettier": "prettier --write index.js",
+    "load-algolia-config": "firebase functions:config:set algolia=\"$(cat .algoliaconfig.json)\"",
+    "load-twitter-config": "firebase functions:config:set twitter=\"$(cat .twitterconfig.json)\"",
+    "load-discord-config": "firebase functions:config:set discord=\"$(cat .discordconfig.json)\"",
+    "load-patreon-config": "firebase functions:config:set patreon=\"$(cat .patreonconfig.json)\"",
+    "load-braintree-config": "firebase functions:config:set braintree=\"$(cat .braintreeconfig.json)\"",
+    "load-global-config": "firebase functions:config:set global=\"$(cat .globalconfig.json)\"",
+    "load-googleapi-config": "firebase functions:config:set googleapi=\"$(cat .googleapiconfig.json)\"",
+    "load-config": "npm run load-googleapi-config && npm run load-braintree-config && npm run load-algolia-config && npm run load-twitter-config && npm run load-discord-config && npm run load-patreon-config && npm run load-global-config"
+  },
+  "engines": {
+    "node": "10"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^5.3.0",
+    "algoliasearch": "^4.2.0",
+    "braintree": "^3.2.1",
+    "deep-diff": "^1.0.2",
+    "firebase-admin": "^9.4.2",
+    "firebase-functions": "^3.6.1",
+    "node-fetch": "^2.6.0",
+    "patreon": "^0.4.1",
+    "sharp": "^0.26.0",
+    "turndown": "^7.0.0",
+    "twit": "^2.2.11"
+  },
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "firebase-functions-test": "^0.2.0",
+    "prettier": "^2.0.5"
+  },
+  "private": true
+}
