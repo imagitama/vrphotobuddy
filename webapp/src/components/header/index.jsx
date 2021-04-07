@@ -26,12 +26,12 @@ const useStyles = makeStyles({
   root: {
     position: 'relative',
     padding: '1rem 1rem 0',
-    height: '125px',
+    height: '100px',
     [mediaQueryForTabletsOrBelow]: {
-      height: '200px'
+      height: '100px'
     },
     [mediaQueryForMobiles]: {
-      height: '180px',
+      height: '100px',
       padding: '0.5rem 0.5rem 0'
     }
   },

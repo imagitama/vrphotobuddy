@@ -11,3 +11,20 @@ exports.downloadAndOptimizeDiscordAvatar = require('./src/functions/downloadAndO
 
 // notifications
 exports.notifyOnCommentCreated = require('./src/functions/notifyOnCommentCreated')
+
+// oauth
+// NOTE: Do these at the end or errors!
+const { getCustomAuthenticationUrl } = require('./src/oauth')
+const {
+  authorize,
+  customAuthentication,
+  garbageCollection,
+  token,
+} = require('oauth2-firebase-auth')
+exports.token = token()
+exports.authorize = authorize()
+exports.authentication = customAuthentication(getCustomAuthenticationUrl())
+exports.garbageCollection = garbageCollection()
+
+// photos
+exports.uploadPhoto = require('./src/functions/uploadPhoto')

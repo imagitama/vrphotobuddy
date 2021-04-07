@@ -122,5 +122,9 @@ service cloud.firestore {
     match /viewCache/{document=**} {
       allow read;
     }
+
+    match /photos/{document=**} {
+      allow read;
+    }
   }
 }

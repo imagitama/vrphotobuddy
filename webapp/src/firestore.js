@@ -72,7 +72,8 @@ export const CollectionNames = {
   Tweets: 'tweets',
   UserMeta: 'userMeta',
   DiscordMessages: 'discordMessages',
-  ViewCache: 'viewCache'
+  ViewCache: 'viewCache',
+  Photos: 'photos'
 }
 
 export const NotificationsFieldNames = {

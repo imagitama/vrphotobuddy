@@ -20,6 +20,7 @@ const OrderDirections = {
 module.exports.OrderDirections = OrderDirections
 
 const CollectionNames = {
+  Photos: 'photos',
   Users: 'users',
   Assets: 'assets',
   Comments: 'comments',
@@ -53,6 +54,11 @@ const CollectionNames = {
   Reports: 'reports',
 }
 module.exports.CollectionNames = CollectionNames
+
+const PhotoFieldNames = {
+  sourceUrl: 'sourceUrl',
+}
+module.exports.PhotoFieldNames = PhotoFieldNames
 
 const ReportFieldNames = {
   parent: 'parent',

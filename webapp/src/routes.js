@@ -9,6 +9,9 @@ export const privacyPolicy = '/privacy-policy'
 export const resetPassword = '/reset-password'
 export const setupProfile = '/setup-profile'
 
+// oauth
+export const loginForOAuth = '/oauth/login'
+
 // admin
 export const admin = '/admin'
 

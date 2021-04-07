@@ -60,6 +60,9 @@ const useStyles = makeStyles({
     [mediaQueryForMobiles]: {
       padding: '0.5rem'
     }
+  },
+  searchBar: {
+    margin: '0 50px'
   }
 })
 
@@ -113,6 +116,11 @@ const MainContent = () => {
       <Switch>
         <Route exact path={routes.home} component={Home} />
         <Route exact path={routes.login} component={Login} />
+        <Route
+          exact
+          path={routes.loginForOAuth}
+          component={() => <Login oauth />}
+        />
         <Route exact path={routes.signUp} component={SignUp} />
         <Route exact path={routes.logout} component={Logout} />
         <Route exact path={routes.myAccount} component={MyAccount} />
@@ -138,34 +146,25 @@ export default () => {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <PageHeader />
-        <div
-          className={`${classes.searchbarArea} ${
-            location.pathname === '/' && !searchTerm ? classes.homepage : ''
-          }`}>
-          <div className={classes.searchBar}>
-            <div className={classes.searchBarInner}>
-              <Searchbar />
-            </div>
-          </div>
-
-          {!isMobile && (
-            <div className={classes.desktopMenu}>
-              <DesktopMenu />
-            </div>
-          )}
-        </div>
         <main className="main">
           <div className={classes.mainContainer}>
-            {new Date() < new Date('21 Feb 2021') && (
-              <Fireworks
-                eventName="1000users"
-                message={
-                  <span style={{ fontSize: '200%' }}>
-                    We just reached 1000 signed up users!
-                  </span>
-                }
-              />
-            )}
+            <div
+              className={`${classes.searchbarArea} ${
+                location.pathname === '/' && !searchTerm ? classes.homepage : ''
+              }`}>
+              <div className={classes.searchBar}>
+                <div className={classes.searchBarInner}>
+                  <Searchbar />
+                </div>
+              </div>
+
+              {!isMobile && (
+                <div className={classes.desktopMenu}>
+                  <DesktopMenu />
+                </div>
+              )}
+            </div>
+
             <BannedNotice />
             {/* Temporarily removed to avoid an unnecessary query <Notices /> */}
             {/* <UnapprovedAssetsMessage />

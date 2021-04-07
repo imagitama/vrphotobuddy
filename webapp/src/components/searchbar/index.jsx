@@ -22,8 +22,8 @@ import { useHistory } from 'react-router'
 
 const useStyles = makeStyles({
   root: {
-    padding: '2px 2px 2px 24px',
-    borderRadius: '3rem',
+    padding: '2px 2px 2px 5px',
+    borderRadius: '5px',
     display: 'flex',
     alignItems: 'center',
     '@media (min-width: 960px)': {

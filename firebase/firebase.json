@@ -26,10 +26,14 @@
       "port": 9000
     },
     "hosting": {
-      "port": null
+      "port": 5001
     },
     "pubsub": {
       "port": 8085
     }
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }

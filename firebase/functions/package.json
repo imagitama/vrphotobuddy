@@ -20,7 +20,9 @@
     "load-braintree-config": "firebase functions:config:set braintree=\"$(cat .braintreeconfig.json)\"",
     "load-global-config": "firebase functions:config:set global=\"$(cat .globalconfig.json)\"",
     "load-googleapi-config": "firebase functions:config:set googleapi=\"$(cat .googleapiconfig.json)\"",
-    "load-config": "npm run load-googleapi-config && npm run load-braintree-config && npm run load-algolia-config && npm run load-twitter-config && npm run load-discord-config && npm run load-patreon-config && npm run load-global-config"
+    "load-oauth-config": "firebase functions:config:set oauth=\"$(cat .oauthconfig.json)\"",
+    "load-config": "npm run load-oauth-config && npm run load-googleapi-config && npm run load-braintree-config && npm run load-algolia-config && npm run load-twitter-config && npm run load-discord-config && npm run load-patreon-config && npm run load-global-config",
+    "generate-shared-key": "cat /dev/urandom | base64 | fold -w 32 | head -n 1"
   },
   "engines": {
     "node": "10"
@@ -33,6 +35,7 @@
     "firebase-admin": "^9.4.2",
     "firebase-functions": "^3.6.1",
     "node-fetch": "^2.6.0",
+    "oauth2-firebase-auth": "^0.2.0",
     "patreon": "^0.4.1",
     "sharp": "^0.26.0",
     "turndown": "^7.0.0",

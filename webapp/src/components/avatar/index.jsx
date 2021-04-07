@@ -13,7 +13,9 @@ export const sizes = {
 
 const useStyles = makeStyles({
   container: {
-    position: 'relative'
+    position: 'relative',
+    overflow: 'hidden',
+    borderRadius: '5px'
   },
   [sizes.TINY]: {
     width: '50px',
