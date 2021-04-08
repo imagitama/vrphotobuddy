@@ -38,11 +38,11 @@ const processPhoto = async (photoPath) => {
   // TODO: Check if a panoramic photo from vrchat
   // TODO: Check if a PNG (user could dump whatever they want in that dir)
 
-  const outputPath = path.resolve(
-    os.tmpdir(),
-    TEMP_DIR_NAME,
-    path.basename(photoPath).replace('.png', '.webp')
-  )
+  // const outputPath = path.resolve(
+  //   os.tmpdir(),
+  //   TEMP_DIR_NAME,
+  //   path.basename(photoPath).replace('.png', '.webp')
+  // )
 
   // await webp.cwebp(photoPath, outputPath, '-q 80', (logging = '-v'))
 

@@ -6,8 +6,6 @@ import { UserFieldNames } from '../../firestore'
 export default () => {
   const [, , user] = useUserRecord()
 
-  console.log('banned-notice', user)
-
   if (user && user[UserFieldNames.isBanned]) {
     return (
       <Paper>

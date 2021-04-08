@@ -91,6 +91,7 @@ export const GuestUsersFieldNames = {
 }
 
 export const UserFieldNames = {
+  username: 'username',
   avatarUrl: 'avatarUrl',
   banReason: 'banReason',
   isEditor: 'isEditor',
@@ -109,6 +110,7 @@ export const PhotoFieldNames = {
   status: 'status', // 0 = active, 1 = deleted
   isAdult: 'isAdult',
   tags: 'tags',
+  album: 'album',
   lastModifiedBy: 'lastModifiedBy',
   lastModifiedAt: 'lastModifiedAt',
   createdBy: 'createdBy',

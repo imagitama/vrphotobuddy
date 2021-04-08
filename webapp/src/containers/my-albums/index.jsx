@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import AddIcon from '@material-ui/icons/Add'
 
 import useDatabaseQuery, {
   options,
@@ -12,7 +13,10 @@ import LoadingIndicator from '../../components/loading-indicator'
 import ErrorMessage from '../../components/error-message'
 import NoResultsMessage from '../../components/no-results-message'
 import AlbumResults from '../../components/album-results'
+import Button from '../../components/button'
+
 import { createRef } from '../../utils'
+import * as routes from '../../routes'
 
 const useStyles = makeStyles({
   root: {
@@ -59,6 +63,9 @@ export default () => {
 
   return (
     <div className={classes.root}>
+      <Button icon={<AddIcon />} url={routes.createAlbum}>
+        Create Album
+      </Button>
       <Albums />
     </div>
   )

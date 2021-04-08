@@ -1,7 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import LazyLoad from 'react-lazyload'
-import { useParams } from 'react-router'
 import { Helmet } from 'react-helmet'
 
 import useDatabaseQuery, {
@@ -13,8 +12,7 @@ import useDatabaseQuery, {
 import {
   CollectionNames,
   PhotoFieldNames,
-  UserFieldNames,
-  AlbumFieldNames
+  UserFieldNames
 } from '../../firestore'
 import useUserRecord from '../../hooks/useUserRecord'
 
@@ -23,12 +21,13 @@ import ErrorMessage from '../../components/error-message'
 import Heading from '../../components/heading'
 import Button from '../../components/button'
 import Markdown from '../../components/markdown'
-import Dropdown from '../../components/dropdown'
-import ChangeAlbumForm from '../../components/change-album-form'
 
 import * as routes from '../../routes'
 import { canEditPhoto } from '../../permissions'
 import { createRef, getOpenGraphUrlForRouteUrl } from '../../utils'
+import { useParams } from 'react-router'
+import PhotoResults from '../../components/photo-results'
+import NoResultsMessage from '../../components/no-results-message'
 
 const useStyles = makeStyles({
   root: {
@@ -46,43 +45,72 @@ const useStyles = makeStyles({
   }
 })
 
-export default () => {
-  const { photoId } = useParams()
-  const [, , user] = useUserRecord()
-  const [isLoading, isError, photo] = useDatabaseQuery(
-    CollectionNames.Photos,
-    photoId,
+const PhotosForAlbum = ({ albumId }) => {
+  const [isLoading, isError, photos] = useDatabaseQuery(
+    CollectionNames.Albums,
+    [
+      [
+        PhotoFieldNames.album,
+        Operators.EQUALS,
+        createRef(CollectionNames.Albums, albumId)
+      ]
+    ],
     { [options.populateRefs]: true }
   )
   const classes = useStyles()
 
-  if (isLoading || !photo) {
-    return <LoadingIndicator message="Loading photo..." />
+  if (isLoading || !photos) {
+    return <LoadingIndicator message="Loading photos for album..." />
   }
 
   if (isError) {
-    return <ErrorMessage>Failed to load photo</ErrorMessage>
+    return <ErrorMessage>Failed to load photos for album</ErrorMessage>
   }
 
-  const { title, description, albums = [], sourceUrl, createdBy } = photo
+  if (!photos.length) {
+    return <NoResultsMessage />
+  }
 
-  const hasPermissionToEdit = canEditPhoto(user, photo)
+  return <PhotoResults photos={photos} />
+}
+
+export default () => {
+  const { albumId } = useParams()
+  const [, , user] = useUserRecord()
+  const [isLoading, isError, album] = useDatabaseQuery(
+    CollectionNames.Albums,
+    albumId,
+    { [options.populateRefs]: true }
+  )
+  const classes = useStyles()
+
+  if (isLoading || !album) {
+    return <LoadingIndicator message="Loading album..." />
+  }
+
+  if (isError) {
+    return <ErrorMessage>Failed to load album</ErrorMessage>
+  }
+
+  const { title, description, sourceUrl, createdBy } = album
+
+  // const hasPermissionToEdit = canEditPhoto(user)
 
   return (
     <div className={classes.root}>
       <Helmet>
-        <title>{`${title} | View photo | vrphotobuddy`}</title>
-        <meta name="description" content={`View the photo ${title}`} />
+        <title>{`${title} | View album | vralbumbuddy`}</title>
+        <meta name="description" content={`View the album ${title}`} />
         <meta property="og:title" content={title} />
         <meta property="og:type" content="website" />
         <meta
           property="og:description"
-          content={`View the photo "${title}".`}
+          content={`View the album "${title}".`}
         />
         <meta
           property="og:url"
           content={getOpenGraphUrlForRouteUrl(
-            routes.viewPhotoWithVar.replace(':photoId', photoId)
+            routes.viewAlbumWithVar.replace(':albumId', albumId)
           )}
         />
         <meta property="og:site_name" content="vrphotobuddy" />
@@ -92,12 +120,12 @@ export default () => {
           <img src={sourceUrl} />
         </div>
         <div className={classes.meta}>
-          <Heading variant="h1">{title || '(untitled)'}</Heading>
+          <Heading variant="h1">{title}</Heading>
           <Heading variant="h2">
             By {createdBy[UserFieldNames.username]}
           </Heading>
           {description && <Markdown source={description} />}
-          <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />
+          <PhotosForAlbum albumId={albumId} />
         </div>
       </div>
     </div>

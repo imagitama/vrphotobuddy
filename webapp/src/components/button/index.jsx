@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
@@ -25,51 +25,57 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default ({
-  children,
-  onClick,
-  url,
-  icon,
-  isDisabled,
-  className = '',
-  openInNewTab = true,
-  ...props
-}) => {
-  const classes = useStyles()
+export default forwardRef(
+  (
+    {
+      children,
+      onClick,
+      url,
+      icon,
+      isDisabled,
+      className = '',
+      openInNewTab = true,
+      ...props
+    },
+    ref
+  ) => {
+    const classes = useStyles()
 
-  const FinalButton = () => (
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={onClick}
-      disabled={isDisabled}
-      className={`${classes.root} ${className} ${
-        props.color === 'tertiary' ? classes.tertiary : ''
-      }`}
-      {...props}>
-      {children} {icon && <span className={classes.icon}>{icon}</span>}
-    </Button>
-  )
+    const FinalButton = () => (
+      <Button
+        ref={ref}
+        variant="contained"
+        color="primary"
+        onClick={onClick}
+        disabled={isDisabled}
+        className={`${classes.root} ${className} ${
+          props.color === 'tertiary' ? classes.tertiary : ''
+        }`}
+        {...props}>
+        {children} {icon && <span className={classes.icon}>{icon}</span>}
+      </Button>
+    )
 
-  if (url) {
-    if (url.substr(0, 1) === '/') {
-      return (
-        <Link to={url}>
-          <FinalButton />
-        </Link>
-      )
-    } else {
-      return (
-        <a
-          href={url}
-          {...(openInNewTab
-            ? { target: '_blank', rel: 'noopener noreferrer' }
-            : {})}>
-          <FinalButton />
-        </a>
-      )
+    if (url) {
+      if (url.substr(0, 1) === '/') {
+        return (
+          <Link to={url}>
+            <FinalButton />
+          </Link>
+        )
+      } else {
+        return (
+          <a
+            href={url}
+            {...(openInNewTab
+              ? { target: '_blank', rel: 'noopener noreferrer' }
+              : {})}>
+            <FinalButton />
+          </a>
+        )
+      }
     }
-  }
 
-  return <FinalButton />
-}
+    return <FinalButton />
+  }
+)

@@ -1,4 +1,4 @@
-import { UserFieldNames } from './firestore'
+import { UserFieldNames, PhotoFieldNames } from './firestore'
 
 export function canEditUsers(user) {
   if (!user) {
@@ -14,9 +14,15 @@ export function canEditComments(user) {
   return user[UserFieldNames.isAdmin] || user[UserFieldNames.isEditor]
 }
 
-export function canEditPhoto(user) {
+export function canEditPhoto(user, photo) {
   if (!user) {
     return false
   }
-  return user[UserFieldNames.isAdmin] || user[UserFieldNames.isEditor]
+  if (user[UserFieldNames.isAdmin] || user[UserFieldNames.isEditor]) {
+    return true
+  }
+  if (user.id === photo[PhotoFieldNames.createdBy].id) {
+    return true
+  }
+  return false
 }

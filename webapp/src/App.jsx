@@ -21,6 +21,7 @@ import MyPhotos from './containers/my-photos'
 import AllAlbums from './containers/all-albums'
 import MyAlbums from './containers/my-albums'
 import ViewPhoto from './containers/view-photo'
+import ViewAlbum from './containers/view-album'
 
 import PageHeader from './components/header'
 import PageFooter from './components/footer'
@@ -79,6 +80,12 @@ const ErrorContainer = lazy(() =>
 const SetupProfile = lazy(() =>
   catchChunkDeaths(() => import('./containers/setup-profile'))
 )
+const ViewUser = lazy(() =>
+  catchChunkDeaths(() => import('./containers/view-user'))
+)
+const CreateAlbum = lazy(() =>
+  catchChunkDeaths(() => import('./containers/create-album'))
+)
 
 const SetupProfileRedirect = () => {
   const [, , user] = useUserRecord()
@@ -117,9 +124,13 @@ const MainContent = () => {
         {/* photos */}
         <Route exact path={routes.allPhotos} component={AllPhotos} />
         <Route exact path={routes.myPhotos} component={MyPhotos} />
+        <Route exact path={routes.viewPhotoWithVar} component={ViewPhoto} />
+
+        {/* albums */}
         <Route exact path={routes.allAlbums} component={AllAlbums} />
         <Route exact path={routes.myAlbums} component={MyAlbums} />
-        <Route exact path={routes.viewPhotoWithVar} component={ViewPhoto} />
+        <Route exact path={routes.createAlbum} component={CreateAlbum} />
+        <Route exact path={routes.viewAlbumWithVar} component={ViewAlbum} />
 
         {/* auth */}
         <Route exact path={routes.login} component={Login} />
@@ -132,6 +143,9 @@ const MainContent = () => {
         <Route exact path={routes.logout} component={Logout} />
         <Route exact path={routes.myAccount} component={MyAccount} />
         <Route exact path={routes.setupProfile} component={SetupProfile} />
+
+        {/* users */}
+        <Route exact path={routes.viewUserWithVar} component={ViewUser} />
 
         {/* core */}
         <Route exact path={routes.home} component={Home} />

@@ -106,7 +106,7 @@ const getIsOauthTokenValid = async (token) => {
     }
   } else {
     console.debug(
-      `oauth token invalid - weird number of results: ${matchingDoc.docs.length}`
+      `oauth token invalid - weird number of results: ${matchingDocs.docs.length}`
     )
     return false
   }

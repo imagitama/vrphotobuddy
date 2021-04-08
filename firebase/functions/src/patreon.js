@@ -9,7 +9,7 @@ const REDIRECT_URI = config.patreon.redirect_uri
 const patreonApiV1BaseUrl = 'https://www.patreon.com/api/oauth2/api'
 const patreonApiV2BaseUrl = 'https://www.patreon.com/api/oauth2/v2'
 
-const campaignId = '5479725'
+// const campaignId = '5479725'
 
 async function getAccessTokenWithCode(code) {
   const url = `https://www.patreon.com/api/oauth2/token?\

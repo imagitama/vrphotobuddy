@@ -57,7 +57,7 @@ export default ({
     <Card className={classes.root} ref={cardRef}>
       <CardActionArea className={classes.actionArea}>
         <Link
-          to={routes.viewPhotoWithVar.replace(':photoId', id)}
+          to={routes.viewAlbumWithVar.replace(':albumId', id)}
           className={classes.link}>
           <LazyLoad width={200} height={200}>
             <CardMedia

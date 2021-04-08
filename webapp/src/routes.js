@@ -4,9 +4,13 @@ export const home = '/'
 export const allPhotos = '/photos'
 export const viewPhotoWithVar = '/photos/:photoId'
 export const myPhotos = '/my-photos'
+
+// albums
 export const allAlbums = '/albums'
 export const viewAlbumWithVar = '/albums/:albumId'
 export const myAlbums = '/my-albums'
+export const createAlbum = '/albums/create'
+export const editAlbumWithVar = '/albums/:albumId/edit'
 
 // auth
 export const login = '/login'
