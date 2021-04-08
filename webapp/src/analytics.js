@@ -6,6 +6,10 @@ export const trackAction = (category, action, payload) => {
     return
   }
 
+  if (!window.gtag) {
+    return
+  }
+
   window.gtag('event', action, {
     event_category: category,
     event_label: JSON.stringify(payload)
