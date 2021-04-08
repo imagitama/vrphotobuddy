@@ -29,7 +29,7 @@ const redirectToOAuth = async user => {
   const response = await fetch(OAUTH_AUTH_TOKEN_ENDPOINT_URL, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       auth_token: authToken,
