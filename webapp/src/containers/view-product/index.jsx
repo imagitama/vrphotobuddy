@@ -4,15 +4,12 @@ import LazyLoad from 'react-lazyload'
 import { Helmet } from 'react-helmet'
 
 import useDatabaseQuery, {
-  CollectionNames,
   options,
   mapDates,
-  ProductFieldNames,
-  TransactionFieldNames,
   Operators,
-  OrderDirections,
-  AssetFieldNames
+  OrderDirections
 } from '../../hooks/useDatabaseQuery'
+import { CollectionNames, PhotoFieldNames } from '../../firestore'
 import useUserRecord from '../../hooks/useUserRecord'
 
 import LoadingIndicator from '../../components/loading-indicator'
@@ -26,7 +23,7 @@ import Markdown from '../../components/markdown'
 import TransactionsList from '../../components/transactions-list'
 
 import * as routes from '../../routes'
-import { canEditProduct } from '../../permissions'
+import { canEditPhoto } from '../../permissions'
 import { createRef, getOpenGraphUrlForRouteUrl } from '../../utils'
 
 const useStyles = makeStyles({
@@ -94,32 +91,22 @@ export default ({
   }
 }) => {
   const [, , user] = useUserRecord()
-  const [isLoading, isError, product] = useDatabaseQuery(
-    CollectionNames.Products,
+  const [isLoading, isError, photo] = useDatabaseQuery(
+    CollectionNames.Photos,
     productId,
     { [options.populateRefs]: true }
   )
   const classes = useStyles()
 
   if (isLoading || !product) {
-    return <LoadingIndicator message="Loading product..." />
+    return <LoadingIndicator message="Loading photo..." />
   }
 
   if (isError) {
-    return <ErrorMessage>Failed to load product</ErrorMessage>
+    return <ErrorMessage>Failed to load photo</ErrorMessage>
   }
 
-  const {
-    asset,
-    [ProductFieldNames.title]: title,
-    [ProductFieldNames.description]: description,
-    priceUsd,
-    isSaleable,
-    isDeleted,
-    isApproved
-  } = product
-
-  const actualTitle = title || asset[AssetFieldNames.title]
+  const {} = photo
 
   if (!isApproved) {
     return <ErrorMessage>Not approved yet</ErrorMessage>
@@ -133,7 +120,7 @@ export default ({
     return <ErrorMessage>Not available for sale</ErrorMessage>
   }
 
-  const hasPermissionToEdit = canEditProduct(user)
+  const hasPermissionToEdit = canEditPhoto(user)
 
   return (
     <div className={classes.root}>

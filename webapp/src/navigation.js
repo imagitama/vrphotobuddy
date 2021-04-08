@@ -1,4 +1,6 @@
 import React from 'react'
+import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum'
+import PhotoIcon from '@material-ui/icons/Photo'
 import * as routes from './routes'
 import { UserFieldNames } from './firestore'
 
@@ -45,8 +47,27 @@ export function getLabelForMenuItem(Label) {
 
 export default [
   {
-    id: 'home',
-    label: 'Home',
-    url: routes.home
+    id: 'photos',
+    label: 'All Photos',
+    url: routes.allPhotos,
+    icon: PhotoIcon
+  },
+  {
+    id: 'albums',
+    label: 'All Albums',
+    url: routes.allAlbums,
+    icon: PhotoAlbumIcon
+  },
+  {
+    id: 'my-photos',
+    label: 'My Photos',
+    url: routes.myPhotos,
+    icon: PhotoIcon
+  },
+  {
+    id: 'my-albums',
+    label: 'My Albums',
+    url: routes.myAlbums,
+    icon: PhotoAlbumIcon
   }
 ]

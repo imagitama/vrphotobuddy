@@ -8,7 +8,6 @@ import {
 } from 'react-router-dom'
 import ThemeProvider from '@material-ui/styles/ThemeProvider'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import { Helmet } from 'react-helmet'
 import { makeStyles } from '@material-ui/core/styles'
 import { useMediaQuery } from 'react-responsive'
 
@@ -17,6 +16,11 @@ import { darkTheme } from './themes'
 
 // Do not lazy load these routes as they are very popular so they should load fast
 import Home from './containers/home'
+import AllPhotos from './containers/all-photos'
+import MyPhotos from './containers/my-photos'
+import AllAlbums from './containers/all-albums'
+import MyAlbums from './containers/my-albums'
+import ViewPhoto from './containers/view-photo'
 
 import PageHeader from './components/header'
 import PageFooter from './components/footer'
@@ -25,20 +29,16 @@ import SearchResults from './components/search-results'
 import ErrorBoundary from './components/error-boundary'
 import LoadingIndicator from './components/loading-indicator'
 import BannedNotice from './components/banned-notice'
-import Fireworks from './components/fireworks'
-import Searchbar from './components/searchbar'
-import DesktopMenu from './components/desktop-menu'
 
 import useSearchTerm from './hooks/useSearchTerm'
 
 import { scrollToTop } from './utils'
-import { searchIndexNameLabels } from './modules/app'
 import {
   mediaQueryForMobiles,
   mediaQueryForTabletsOrBelow,
   queryForMobiles
 } from './media-queries'
-import { AssetCategories, UserFieldNames } from './firestore'
+import { UserFieldNames } from './firestore'
 import useUserRecord from './hooks/useUserRecord'
 
 const catchChunkDeaths = functionToImport =>
@@ -114,7 +114,14 @@ const MainContent = () => {
     <Suspense fallback={<LoadingIndicator />}>
       <SetupProfileRedirect />
       <Switch>
-        <Route exact path={routes.home} component={Home} />
+        {/* photos */}
+        <Route exact path={routes.allPhotos} component={AllPhotos} />
+        <Route exact path={routes.myPhotos} component={MyPhotos} />
+        <Route exact path={routes.allAlbums} component={AllAlbums} />
+        <Route exact path={routes.myAlbums} component={MyAlbums} />
+        <Route exact path={routes.viewPhotoWithVar} component={ViewPhoto} />
+
+        {/* auth */}
         <Route exact path={routes.login} component={Login} />
         <Route
           exact
@@ -125,6 +132,9 @@ const MainContent = () => {
         <Route exact path={routes.logout} component={Logout} />
         <Route exact path={routes.myAccount} component={MyAccount} />
         <Route exact path={routes.setupProfile} component={SetupProfile} />
+
+        {/* core */}
+        <Route exact path={routes.home} component={Home} />
         <Route
           component={() => (
             <ErrorContainer code={404} message="Page not found" />
@@ -148,23 +158,6 @@ export default () => {
         <PageHeader />
         <main className="main">
           <div className={classes.mainContainer}>
-            <div
-              className={`${classes.searchbarArea} ${
-                location.pathname === '/' && !searchTerm ? classes.homepage : ''
-              }`}>
-              <div className={classes.searchBar}>
-                <div className={classes.searchBarInner}>
-                  <Searchbar />
-                </div>
-              </div>
-
-              {!isMobile && (
-                <div className={classes.desktopMenu}>
-                  <DesktopMenu />
-                </div>
-              )}
-            </div>
-
             <BannedNotice />
             {/* Temporarily removed to avoid an unnecessary query <Notices /> */}
             {/* <UnapprovedAssetsMessage />

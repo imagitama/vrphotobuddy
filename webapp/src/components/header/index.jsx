@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import { useMediaQuery } from 'react-responsive'
 import MenuIcon from '@material-ui/icons/Menu'
+import CameraIcon from '@material-ui/icons/Camera'
 
 import * as routes from '../../routes'
 import { openMenu } from '../../modules/app'
@@ -18,6 +19,8 @@ import { trackAction } from '../../analytics'
 
 import MobileMenu from '../mobile-menu'
 import DesktopAccountMenu from '../desktop-account-menu'
+import Searchbar from '../searchbar'
+import DesktopMenu from '../desktop-menu'
 
 // when the navigation starts obstructing the logo
 const mediaQueryForMenuLogoCollision = '@media (max-width: 1280px)'
@@ -26,46 +29,10 @@ const useStyles = makeStyles({
   root: {
     position: 'relative',
     padding: '1rem 1rem 0',
-    height: '100px',
-    [mediaQueryForTabletsOrBelow]: {
-      height: '100px'
-    },
-    [mediaQueryForMobiles]: {
-      height: '100px',
-      padding: '0.5rem 0.5rem 0'
-    }
-  },
-  background: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: -5,
-    transition: 'all 1000ms'
-  },
-  withBanner: {
-    opacity: 0
-  },
-  cols: {
     display: 'flex',
-    [mediaQueryForMobiles]: {
-      flexWrap: 'wrap'
-    }
+    alignItems: 'center'
   },
-  leftCol: {
-    flexShrink: 1,
-    marginRight: '2%'
-  },
-  rightCol: {
-    width: '100%'
-  },
-  floatingMenu: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    padding: '1rem'
-  },
+  floatingMenu: {},
   searchBar: {
     width: '100%'
   },
@@ -82,15 +49,7 @@ const useStyles = makeStyles({
   },
   logoWrapper: {
     display: 'flex',
-    alignItems: 'start',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    margin: '1rem',
-    [mediaQueryForMobiles]: {
-      position: 'relative',
-      padding: 0
-    }
+    alignItems: 'start'
   },
   socialIcons: {
     marginLeft: '0.25rem',
@@ -115,17 +74,14 @@ const useStyles = makeStyles({
     }
   },
   logo: {
-    '& path': {
-      fill: '#FFF'
-    },
-    height: '100px',
-    width: 'auto',
-    transition: 'all 100ms',
-    [mediaQueryForMenuLogoCollision]: {
-      height: '75px'
-    },
-    [mediaQueryForMobiles]: {
-      height: '75px'
+    display: 'flex',
+    alignItems: 'center',
+    textTransform: 'uppercase',
+    fontSize: '200%',
+    whiteSpace: 'nowrap',
+    '& svg': {
+      marginLeft: '0.5rem',
+      fontSize: '200%'
     }
   },
   menuToggleButton: {
@@ -166,9 +122,21 @@ export default () => {
   return (
     <header className={classes.root}>
       <div className={classes.logoWrapper}>
-        <Link to={routes.home} title="Go to the homepage">
-          VR Photo Buddy
+        <Link
+          to={routes.home}
+          title="Go to the homepage"
+          className={classes.logo}>
+          VR Photo Buddy <CameraIcon />
         </Link>
+      </div>
+
+      <div className={classes.searchBar}>
+        <div className={classes.searchBarInner}>{/* <Searchbar /> */}</div>
+        {!isMobile && (
+          <div className={classes.desktopMenu}>
+            <DesktopMenu />
+          </div>
+        )}
       </div>
 
       <div className={classes.floatingMenu}>

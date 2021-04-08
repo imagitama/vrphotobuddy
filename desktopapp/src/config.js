@@ -8,3 +8,6 @@ module.exports.PATH_TO_VRCHAT_PHOTOS = path.resolve(
 
 module.exports.OAUTH_AUTHORIZE_URL =
   process.env.VRPHOTOBUDDY_OAUTH_AUTHORIZE_URL
+
+// TODO: Use env var?
+module.exports.OAUTH_REDIRECT_WEBSERVER_PORT = 3001

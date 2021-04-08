@@ -73,7 +73,8 @@ export const CollectionNames = {
   UserMeta: 'userMeta',
   DiscordMessages: 'discordMessages',
   ViewCache: 'viewCache',
-  Photos: 'photos'
+  Photos: 'photos',
+  Albums: 'albums'
 }
 
 export const NotificationsFieldNames = {
@@ -90,37 +91,40 @@ export const GuestUsersFieldNames = {
 }
 
 export const UserFieldNames = {
-  username: 'username',
+  avatarUrl: 'avatarUrl',
+  banReason: 'banReason',
   isEditor: 'isEditor',
   isAdmin: 'isAdmin',
-  enabledAdultContent: 'enabledAdultContent',
-  lastModifiedBy: 'lastModifiedBy',
-  lastModifiedAt: 'lastModifiedAt',
-  avatarUrl: 'avatarUrl',
-  createdBy: 'createdBy',
-  createdAt: 'createdAt',
-  isBanned: 'isBanned',
-  banReason: 'banReason',
-  isPatron: 'isPatron'
+  isBanned: 'isBanned'
 }
 
-export const ProfileFieldNames = {
-  vrchatUserId: 'vrchatUserId',
-  vrchatUsername: 'vrchatUsername',
-  discordUsername: 'discordUsername',
-  twitterUsername: 'twitterUsername',
-  telegramUsername: 'telegramUsername',
-  youtubeChannelId: 'youtubeChannelId',
-  twitchUsername: 'twitchUsername',
-  patreonUsername: 'patreonUsername',
+export const PhotoFieldNames = {
+  sourceUrl: 'sourceUrl',
+  largeUrl: 'largeUrl',
+  mediumUrl: 'mediumUrl',
+  smallUrl: 'smallUrl',
+  title: 'title',
+  description: 'description',
+  privacy: 'privacy', // 0 = public, 1 = private
+  status: 'status', // 0 = active, 1 = deleted
+  isAdult: 'isAdult',
+  tags: 'tags',
   lastModifiedBy: 'lastModifiedBy',
   lastModifiedAt: 'lastModifiedAt',
-  bio: 'bio',
-  notifyOnUnapprovedAssets: 'notifyOnUnapprovedAssets', // deprecated
-  notificationEmail: 'notificationEmail',
-  favoriteSpecies: 'favoriteSpecies',
-  notificationPrefs: 'notificationPrefs',
-  discordUserId: 'discordUserId',
-  neosVrUsername: 'neosVrUsername',
-  chilloutVrUsername: 'chilloutVrUsername'
+  createdBy: 'createdBy',
+  createdAt: 'createdAt'
+}
+
+export const AlbumFieldNames = {
+  title: 'title',
+  description: 'description',
+  coverImageUrl: 'coverImageUrl',
+  privacy: 'privacy', // 0 = public, 1 = private
+  status: 'status', // 0 = active, 1 = deleted
+  isAdult: 'isAdult',
+  tags: 'tags',
+  lastModifiedBy: 'lastModifiedBy',
+  lastModifiedAt: 'lastModifiedAt',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt'
 }

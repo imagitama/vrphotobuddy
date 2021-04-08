@@ -10,6 +10,21 @@ const OAUTH_AUTH_TOKEN_SECRET_KEY_32 = config.oauth.auth_token_secret_key_32
 const OAUTH_API_KEY = config.oauth.api_key
 const OAUTH_LOGIN_PAGE_URL = config.oauth.login_page_url
 
+const oAuthCollectionNames = {
+  accessTokens: 'oauth2_access_tokens',
+  authInfo: 'oauth2_auth_info',
+  clients: 'oauth2_clients',
+}
+
+const AccessTokenFieldNames = {
+  token: 'token',
+  auth_info_id: 'auth_info_id',
+}
+
+const AuthInfoFieldNames = {
+  user_id: 'user_id',
+}
+
 // TODO: Flag to disable this
 // TODO: Check if settings not set
 
@@ -59,8 +74,8 @@ const getIsOauthTokenValid = async (token) => {
 
   try {
     matchingDocs = await db
-      .collection('oauth2_access_tokens')
-      .where('token', Operators.EQUALS, token)
+      .collection(oAuthCollectionNames.accessTokens)
+      .where(AccessTokenFieldNames.token, Operators.EQUALS, token)
       .get()
   } catch (err) {
     console.debug(
@@ -97,3 +112,46 @@ const getIsOauthTokenValid = async (token) => {
   }
 }
 module.exports.getIsOauthTokenValid = getIsOauthTokenValid
+
+const getUserRefFromOAuthToken = async (oauthToken) => {
+  // assumes token is valid
+
+  const matchingDocs = await db
+    .collection(oAuthCollectionNames.accessTokens)
+    .where(AccessTokenFieldNames.token, Operators.EQUALS, oauthToken)
+    .get()
+
+  if (matchingDocs.docs.length !== 1) {
+    throw new Error(
+      `Cannot get user ref from oauth token "${oauthToken}": does not exist in collection!`
+    )
+  }
+
+  const authInfoId = matchingDocs.docs[0].get(
+    AccessTokenFieldNames.auth_info_id
+  )
+
+  const authInfoDoc = await db
+    .collection(oAuthCollectionNames.authInfo)
+    .doc(authInfoId)
+    .get()
+
+  if (!authInfoDoc.exists) {
+    throw new Error(
+      `Cannot get user ref from oauth token "${oauthToken}": auth info "${authInfoId}" does not exist!`
+    )
+  }
+
+  const userId = authInfoDoc.get(AuthInfoFieldNames.user_id)
+
+  const userDoc = await db.collection(CollectionNames.Users).doc(userId).get()
+
+  if (!userDoc.exists) {
+    throw new Error(
+      `Cannot get user ref from oauth token "${oauthToken}": user "${userId}" does not exist!`
+    )
+  }
+
+  return userDoc.ref
+}
+module.exports.getUserRefFromOAuthToken = getUserRefFromOAuthToken

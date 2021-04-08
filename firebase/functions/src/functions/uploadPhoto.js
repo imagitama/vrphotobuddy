@@ -1,6 +1,6 @@
 const functions = require('firebase-functions')
-const { db, CollectionNames, PhotoFieldNames } = require('../firebase')
-const { getIsOauthTokenValid } = require('../oauth')
+const { getIsOauthTokenValid, getUserRefFromOAuthToken } = require('../oauth')
+const { insertPhoto } = require('../photos')
 
 module.exports = functions.https.onCall(async (data) => {
   try {
@@ -18,10 +18,10 @@ module.exports = functions.https.onCall(async (data) => {
       throw new Error('OAuth token is invalid or has expired')
     }
 
-    // TODO: Decode base64 and write to bucket for better performance
-    await db.collection(CollectionNames.Photos).add({
-      [PhotoFieldNames.sourceUrl]: `data:image/webp;base64,${base64EncodedPhoto}`,
-    })
+    await insertPhoto(
+      base64EncodedPhoto,
+      await getUserRefFromOAuthToken(oauthToken)
+    )
 
     return { success: false }
   } catch (err) {

@@ -1,4 +1,4 @@
-import { UserFieldNames, TransactionFieldNames } from './hooks/useDatabaseQuery'
+import { UserFieldNames } from './firestore'
 
 export function canEditUsers(user) {
   if (!user) {
@@ -8,6 +8,13 @@ export function canEditUsers(user) {
 }
 
 export function canEditComments(user) {
+  if (!user) {
+    return false
+  }
+  return user[UserFieldNames.isAdmin] || user[UserFieldNames.isEditor]
+}
+
+export function canEditPhoto(user) {
   if (!user) {
     return false
   }

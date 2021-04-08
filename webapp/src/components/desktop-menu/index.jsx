@@ -42,6 +42,9 @@ const useStyles = makeStyles({
   twitterBtn: {
     paddingLeft: '1rem',
     marginTop: '0.4rem'
+  },
+  icon: {
+    marginRight: '0.5rem'
   }
 })
 
@@ -75,9 +78,9 @@ function Dropdown({ label, items, isOpen, onOpen, onClose }) {
         onClose={onClose}>
         {isChildrenAComponent(items)
           ? React.createElement(items, { onClose })
-          : items.map(({ label, url }) => (
+          : items.map(({ icon: Icon, label, url }) => (
               <MenuItem key={url} onClick={() => onClickItem(url)}>
-                {label}
+                <Icon /> {label}
               </MenuItem>
             ))}
       </Menu>
@@ -102,7 +105,7 @@ export default () => {
     <div className={classes.root}>
       {navItems
         .filter(navItem => canShowMenuItem(navItem, user))
-        .map(({ id, label, url, children }) => {
+        .map(({ id, icon: Icon, label, url, children }) => {
           const actualLabel = getLabelForMenuItem(label)
 
           const Anchor = ({ children }) =>
@@ -148,7 +151,9 @@ export default () => {
                   onClose={() => closeMenuDropdown()}
                 />
               ) : (
-                <Anchor>{actualLabel}</Anchor>
+                <Anchor>
+                  <Icon className={classes.icon} /> {actualLabel}
+                </Anchor>
               )}
             </div>
           )

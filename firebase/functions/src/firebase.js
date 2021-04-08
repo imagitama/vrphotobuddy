@@ -57,8 +57,49 @@ module.exports.CollectionNames = CollectionNames
 
 const PhotoFieldNames = {
   sourceUrl: 'sourceUrl',
+  largeUrl: 'largeUrl',
+  mediumUrl: 'mediumUrl',
+  smallUrl: 'smallUrl',
+  title: 'title',
+  description: 'description',
+  album: 'album',
+  privacy: 'privacy', // 0 = public, 1 = private
+  status: 'status', // 0 = active, 1 = deleted
+  isAdult: 'isAdult',
+  tags: 'tags',
+  lastModifiedBy: 'lastModifiedBy',
+  lastModifiedAt: 'lastModifiedAt',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
 }
 module.exports.PhotoFieldNames = PhotoFieldNames
+
+const PhotoPrivacies = {
+  Public: 0,
+  Private: 1,
+}
+module.exports.PhotoPrivacies = PhotoPrivacies
+
+const PhotoStatuses = {
+  Active: 0,
+  Deleted: 1,
+}
+module.exports.PhotoStatuses = PhotoStatuses
+
+const AlbumFieldNames = {
+  title: 'title',
+  description: 'description',
+  coverImageUrl: 'coverImageUrl',
+  privacy: 'privacy', // 0 = public, 1 = private
+  status: 'status', // 0 = active, 1 = deleted
+  isAdult: 'isAdult',
+  tags: 'tags',
+  lastModifiedBy: 'lastModifiedBy',
+  lastModifiedAt: 'lastModifiedAt',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+}
+module.exports.AlbumFieldNames = AlbumFieldNames
 
 const ReportFieldNames = {
   parent: 'parent',

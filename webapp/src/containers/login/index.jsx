@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+import firebase from 'firebase/app'
 
 import * as routes from '../../routes'
 import { trackAction } from '../../analytics'
@@ -12,6 +13,7 @@ import Heading from '../../components/heading'
 import BodyText from '../../components/body-text'
 import ErrorMessage from '../../components/error-message'
 import LoginWithDiscord from '../../components/login-with-discord'
+import LoadingIndicator from '../../components/loading-indicator'
 
 const OAUTH_AUTH_TOKEN_ENDPOINT_URL = process.env.REACT_APP_OAUTH_REDIRECT_URL
 
@@ -48,8 +50,20 @@ export default ({ oauth = false }) => {
   const queryParams = useQueryParams()
   const { push } = useHistory()
 
+  useEffect(() => {
+    if (!oauth || !user) {
+      return
+    }
+
+    redirectToOAuth(firebase.auth().currentUser)
+  }, [user === null])
+
   if (user && !queryParams.get('code')) {
-    return <ErrorMessage>You are already logged in</ErrorMessage>
+    if (oauth) {
+      return <LoadingIndicator />
+    } else {
+      return <ErrorMessage>You are already logged in</ErrorMessage>
+    }
   }
 
   if (queryParams.get('code')) {
@@ -69,7 +83,6 @@ export default ({ oauth = false }) => {
         <meta name="description" content={`Log in to the site.`} />
       </Helmet>
       <Heading variant="h1">Login</Heading>
-      <BodyText>Enter your details below to login.</BodyText>
       <LoginForm
         onSuccess={async authResult => {
           trackAction('Login', 'Click login button')
