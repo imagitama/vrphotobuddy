@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import useDatabaseQuery, { options } from '../../hooks/useDatabaseQuery'
-import { CollectionNames } from '../../firestore'
+import { CollectionNames, PhotoFieldNames } from '../../firestore'
 
 import LoadingIndicator from '../../components/loading-indicator'
 import ErrorMessage from '../../components/error-message'
@@ -24,7 +24,10 @@ const Photos = () => {
   const [isLoading, isError, results] = useDatabaseQuery(
     CollectionNames.Photos,
     undefined,
-    { [options.populateRefs]: true }
+    {
+      [options.populateRefs]: true,
+      [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC]
+    }
   )
 
   if (isLoading || !results) {

@@ -3,9 +3,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import GetAppIcon from '@material-ui/icons/GetApp'
 
 import useSearchTerm from '../../hooks/useSearchTerm'
-import useDatabaseQuery from '../../hooks/useDatabaseQuery'
+import useDatabaseQuery, {
+  options,
+  OrderDirections
+} from '../../hooks/useDatabaseQuery'
 
-import { CollectionNames } from '../../firestore'
+import { CollectionNames, PhotoFieldNames } from '../../firestore'
 import PhotoResults from '../../components/photo-results'
 import Button from '../../components/button'
 
@@ -23,7 +26,9 @@ const useStyles = makeStyles({
 export default () => {
   const classes = useStyles()
   const searchTerm = useSearchTerm()
-  const [, , results] = useDatabaseQuery(CollectionNames.Photos, [], 5)
+  const [, , results] = useDatabaseQuery(CollectionNames.Photos, [], {
+    [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC]
+  })
 
   if (searchTerm) {
     return null
