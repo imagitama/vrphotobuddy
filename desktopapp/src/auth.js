@@ -1,6 +1,6 @@
 const open = require('open')
 const storage = require('./storage')
-const config = require('./config')
+const { getConfig } = require('./config')
 const express = require('express')
 
 let isAuthenticated = false
@@ -16,7 +16,7 @@ let validAccessToken
 
 const getNewOAuthTokenAndExpiry = async () => {
   return new Promise((resolve, reject) => {
-    console.debug('authorizing with oauth...')
+    console.info('authorizing with oauth...')
 
     const app = express()
 
@@ -24,7 +24,7 @@ const getNewOAuthTokenAndExpiry = async () => {
       const accessToken = req.query.access_token
       const expiresIn = req.query.expires_in
 
-      console.debug(`webserver was redirected with data`, req.query)
+      console.info(`webserver was redirected with data`, req.query)
 
       res
         .status(200)
@@ -35,13 +35,15 @@ const getNewOAuthTokenAndExpiry = async () => {
     })
 
     // TODO: Configure port with env
-    app.listen(config.OAUTH_REDIRECT_WEBSERVER_PORT, () => {
-      console.debug(
-        `waiting for oauth response on port ${config.OAUTH_REDIRECT_WEBSERVER_PORT}`
+    app.listen(getConfig().OAUTH_REDIRECT_WEBSERVER_PORT, () => {
+      console.info(
+        `waiting for oauth response on port ${
+          getConfig().OAUTH_REDIRECT_WEBSERVER_PORT
+        }`
       )
     })
 
-    open(config.OAUTH_AUTHORIZE_URL)
+    open(getConfig().OAUTH_AUTHORIZE_URL)
   })
 }
 
@@ -51,25 +53,25 @@ const getIsTokenValid = async (token) => {
   )
 
   if (!storedOAuthTokenExpiryMs) {
-    console.debug('token invalid: no expiry stored')
+    console.info('token invalid: no expiry stored')
     return false
   }
 
-  console.debug(`expiry: ${storedOAuthTokenExpiryMs}`)
+  console.info(`expiry: ${storedOAuthTokenExpiryMs}`)
 
   const dateNow = new Date()
   const expiryDate = new Date(storedOAuthTokenExpiryMs)
   const diffDate = dateNow - expiryDate
 
-  console.debug(`current date: ${dateNow}`)
-  console.debug(`expiry date: ${expiryDate}`)
+  console.info(`current date: ${dateNow}`)
+  console.info(`expiry date: ${expiryDate}`)
 
-  if (dateNow > expiryDate) {
-    console.debug(
-      `token invalid: expired on ${expiryDate} and the diff is ${diffDate}`
-    )
-    return false
-  }
+  // if (dateNow > expiryDate) {
+  //   console.info(
+  //     `token invalid: expired on ${expiryDate} and the diff is ${diffDate}`
+  //   )
+  //   return false
+  // }
 
   return true
 }
@@ -77,23 +79,23 @@ const getIsTokenValid = async (token) => {
 const convertMinutesToMilliseconds = (mins) => mins * 60 * 1000
 
 const authenticate = async () => {
-  console.debug(`authenticating...`)
+  console.info(`authenticating...`)
 
   const storedOAuthToken = await storage.getItem(storageKeyOAuthToken)
   let needsNewToken = false
 
   if (storedOAuthToken) {
-    console.debug(`found existing token: ${storedOAuthToken}`)
+    console.info(`found existing token: ${storedOAuthToken}`)
 
     if (await getIsTokenValid(storedOAuthToken)) {
       validAccessToken = storedOAuthToken
-      console.debug('token is still valid')
+      console.info('token is still valid')
     } else {
-      console.debug('token has expired!')
+      console.info('token has expired!')
       needsNewToken = true
     }
   } else {
-    console.debug('could not find an existing token')
+    console.info('could not find an existing token')
     needsNewToken = true
   }
 
@@ -106,8 +108,8 @@ const authenticate = async () => {
       Date.now() + convertMinutesToMilliseconds(expiresIn / 60)
     await storage.setItem(storageKeyOAuthTokenExpiryMs, expiryAsUnixTimestampMs)
 
-    console.debug(`using new token: ${validAccessToken}`)
-    console.debug(`expires in: ${expiryAsUnixTimestampMs}`)
+    console.info(`using new token: ${validAccessToken}`)
+    console.info(`expires in: ${expiryAsUnixTimestampMs}`)
   }
 
   isAuthenticated = true

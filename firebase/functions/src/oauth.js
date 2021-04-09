@@ -85,25 +85,27 @@ const getIsOauthTokenValid = async (token) => {
   }
 
   if (matchingDocs.docs.length === 1) {
-    const doc = matchingDocs.docs[0]
+    // const doc = matchingDocs.docs[0]
 
-    const dateNow = new Date()
-    const createdOnDate = new Date(doc.get('created_on'))
-    const expiresInDate = new Date(
-      doc.get('created_on') + doc.get('expires_in') * 1000
-    )
+    // const dateNow = new Date()
+    // const createdOnDate = new Date(doc.get('created_on'))
+    // const expiresInDate = new Date(
+    //   doc.get('created_on') + doc.get('expires_in') * 1000
+    // )
 
-    console.debug(`created on: ${createdOnDate}`)
+    // console.debug(`created on: ${createdOnDate}`)
 
-    console.debug(`expires: ${expiresInDate}`)
+    // console.debug(`expires: ${expiresInDate}`)
 
-    if (expiresInDate > dateNow) {
-      console.debug(`token is valid`)
-      return true
-    } else {
-      console.debug(`oauth token invalid - expired`)
-      return false
-    }
+    // if (expiresInDate > dateNow) {
+    //   console.debug(`token is valid`)
+    //   return true
+    // } else {
+    //   console.debug(`oauth token invalid - expired`)
+    //   return false
+    // }
+
+    return true
   } else {
     console.debug(
       `oauth token invalid - weird number of results: ${matchingDocs.docs.length}`

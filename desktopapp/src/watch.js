@@ -1,7 +1,7 @@
 const chokidar = require('chokidar')
 const path = require('path')
 const { promises: fs } = require('fs')
-const { PATH_TO_VRCHAT_PHOTOS } = require('./config')
+const { getConfig } = require('./config')
 const { processPhoto } = require('./photo')
 
 const wait = (time) =>
@@ -20,15 +20,18 @@ const waitForPhotoToBeReadable = async (path) => {
 }
 
 module.exports.startWatching = () => {
-  console.debug('starting to watch...')
+  console.info('starting to watch...')
 
-  console.debug(`watch path: ${PATH_TO_VRCHAT_PHOTOS}`)
+  console.info(`watch path: ${getConfig().PATH_TO_VRCHAT_PHOTOS}`)
 
   // TODO: Only use polling as fallback (using it because ubuntu for windows doesnt let you sub)
   chokidar
-    .watch(PATH_TO_VRCHAT_PHOTOS, { usePolling: true, ignoreInitial: true })
+    .watch(getConfig().PATH_TO_VRCHAT_PHOTOS, {
+      usePolling: true,
+      ignoreInitial: true,
+    })
     .on('add', async (filepath) => {
-      console.debug(`new photo detected: ${filepath}`)
+      console.info(`new photo detected: ${filepath}`)
 
       try {
       } catch {}
@@ -36,5 +39,5 @@ module.exports.startWatching = () => {
       await processPhoto(filepath)
     })
 
-  console.debug('now watching')
+  console.info('now watching')
 }

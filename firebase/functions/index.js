@@ -14,10 +14,45 @@ const {
   garbageCollection,
   token,
 } = require('oauth2-firebase-auth')
+const authorizeApp = authorize()
+const authenticationApp = customAuthentication(getCustomAuthenticationUrl())
 exports.token = token()
-exports.authorize = authorize()
-exports.authentication = customAuthentication(getCustomAuthenticationUrl())
+exports.authorize = authorizeApp
+exports.authentication = authenticationApp
 exports.garbageCollection = garbageCollection()
 
 // photos
 exports.uploadPhoto = require('./src/functions/uploadPhoto')
+
+const functions = require('firebase-functions')
+const express = require('express')
+
+const handleAuthorizeApp = express()
+handleAuthorizeApp.get('/authorize/entry', (req, res) => {
+  req.url = '/entry'
+  authorizeApp(req, res)
+})
+handleAuthorizeApp.all('*', (req, res) => {
+  res.status(404).send(`handleAuthorize 404 not found ${req.url}`)
+})
+exports.handleAuthorize = functions.https.onRequest(handleAuthorizeApp)
+
+const handleAuthenticationApp = express()
+handleAuthenticationApp.get('/authentication', (req, res) => {
+  req.url = '/'
+  authenticationApp(req, res)
+})
+handleAuthenticationApp.post('/authentication', (req, res) => {
+  req.url = '/'
+  authenticationApp(req, res)
+})
+handleAuthenticationApp.options('/authentication', (req, res) => {
+  req.url = '/'
+  authenticationApp(req, res)
+})
+handleAuthenticationApp.all('*', (req, res) => {
+  res.status(404).send(`handleAuthentication 404 not found ${req.url}`)
+})
+exports.handleAuthentication = functions.https.onRequest(
+  handleAuthenticationApp
+)

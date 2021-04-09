@@ -17,23 +17,23 @@ const base64Encode = async (photoPath) => {
 }
 
 const uploadPhotoBuffer = async (photoBuffer) => {
-  console.debug('encoding photo...')
+  console.info('encoding photo...')
 
   // const base64EncodedPhoto = await base64Encode(photoPath)
   const base64EncodedPhoto = photoBuffer.toString('base64')
 
-  console.debug('uploading photo...')
+  console.info('uploading photo...')
 
   await callFunction(functionNames.uploadPhoto, {
     base64EncodedPhoto,
     oauthToken: getOAuthToken(),
   })
 
-  console.debug(`photo has been uploaded successfully`)
+  console.info(`photo has been uploaded successfully`)
 }
 
 const processPhoto = async (photoPath) => {
-  console.debug(`processing photo: ${photoPath}`)
+  console.info(`processing photo: ${photoPath}`)
 
   // TODO: Check if a panoramic photo from vrchat
   // TODO: Check if a PNG (user could dump whatever they want in that dir)
@@ -52,7 +52,7 @@ const processPhoto = async (photoPath) => {
     })
     .toBuffer()
 
-  console.debug(`photo converted to webp`)
+  console.info(`photo converted to webp`)
 
   await uploadPhotoBuffer(webpBuffer)
 }

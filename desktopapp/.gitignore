@@ -1,3 +1,7 @@
 .env
+.env.production
 node_modules
 .node-persist
+build
+*.log
+dist

@@ -19,7 +19,7 @@ if (
   process.env.VRPHOTOBUDDY_USE_EMULATORS ||
   process.env.VRPHOTOBUDDY_USE_FUNCTIONS_EMULATOR
 ) {
-  console.debug(`using functions emulator`)
+  console.info(`using functions emulator`)
   firebase.functions().useFunctionsEmulator('http://localhost:5000')
 }
 
@@ -27,7 +27,7 @@ if (
   process.env.VRPHOTOBUDDY_USE_EMULATORS ||
   process.env.VRPHOTOBUDDY_USE_FIRESTORE_EMULATOR
 ) {
-  console.debug(`using firestore emulator`)
+  console.info(`using firestore emulator`)
   firebase.firestore().useEmulator('localhost', 8080)
 }
 
@@ -35,7 +35,7 @@ if (
   process.env.VRPHOTOBUDDY_USE_EMULATORS ||
   process.env.VRPHOTOBUDDY_USE_AUTH_EMULATOR
 ) {
-  console.debug(`using auth emulator`)
+  console.info(`using auth emulator`)
   firebase.auth().useEmulator('http://localhost:9099')
 }
 
