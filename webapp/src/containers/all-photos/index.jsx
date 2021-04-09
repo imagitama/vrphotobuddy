@@ -1,7 +1,10 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import useDatabaseQuery, { options } from '../../hooks/useDatabaseQuery'
+import useDatabaseQuery, {
+  options,
+  OrderDirections
+} from '../../hooks/useDatabaseQuery'
 import { CollectionNames, PhotoFieldNames } from '../../firestore'
 
 import LoadingIndicator from '../../components/loading-indicator'
