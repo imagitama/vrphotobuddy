@@ -67,6 +67,7 @@ const PhotoFieldNames = {
   status: 'status', // 0 = active, 1 = deleted
   isAdult: 'isAdult',
   tags: 'tags',
+  platform: 'platform', // 0 = VRChat, 1 = CVR, 2 = NeosVR
   lastModifiedBy: 'lastModifiedBy',
   lastModifiedAt: 'lastModifiedAt',
   createdBy: 'createdBy',

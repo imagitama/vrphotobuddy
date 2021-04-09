@@ -27,6 +27,7 @@ const uploadPhotoBuffer = async (photoBuffer) => {
   await callFunction(functionNames.uploadPhoto, {
     base64EncodedPhoto,
     oauthToken: getOAuthToken(),
+    platform: 0, // 0 = VRChat, 1 = CVR, 2 = Neos
   })
 
   console.info(`photo has been uploaded successfully`)

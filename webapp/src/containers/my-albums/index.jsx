@@ -60,12 +60,15 @@ const Albums = () => {
 
 export default () => {
   const classes = useStyles()
+  const userId = useFirebaseUserId()
 
   return (
     <div className={classes.root}>
-      <Button icon={<AddIcon />} url={routes.createAlbum}>
-        Create Album
-      </Button>
+      {userId && (
+        <Button icon={<AddIcon />} url={routes.createAlbum}>
+          Create Album
+        </Button>
+      )}
       <Albums />
     </div>
   )

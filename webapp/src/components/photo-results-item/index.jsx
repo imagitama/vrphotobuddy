@@ -46,6 +46,13 @@ const useStyles = makeStyles({
       width: '100%',
       display: 'block'
     }
+  },
+  meta: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    color: '#FFF',
+    padding: '0.5rem'
   }
 })
 
@@ -70,7 +77,7 @@ export default ({
               <img src={sourceUrl} alt="Image for photo" />
             </div>
           </LazyLoad>
-          {/* <CardContent>
+          <div className={classes.meta}>
             <Typography variant="h5" component="h2">
               {title}
             </Typography>
@@ -82,7 +89,7 @@ export default ({
             <Typography variant="body2" color="textSecondary" component="p">
               {truncateTextAndAddEllipsis(description)}
             </Typography>
-          </CardContent> */}
+          </div>
         </Link>
       </CardActionArea>
     </Card>

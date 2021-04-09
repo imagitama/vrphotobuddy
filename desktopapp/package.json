@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "start:node": "IS_NODE=true NODE_ENV=development nodemon --watch src src/main.js",
-    "start:emulators": "VRPHOTOBUDDY_USE_EMULATORS=true && npm start",
+    "start:emulators": "VRPHOTOBUDDY_USE_EMULATORS=true IS_NODE=true NODE_ENV=development nodemon --watch src src/main.js",
     "start:electron": "electron src/main.js",
     "build": "electron-builder -w --x64"
   },

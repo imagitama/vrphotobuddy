@@ -4,7 +4,7 @@ const { insertPhoto } = require('../photos')
 
 module.exports = functions.https.onCall(async (data) => {
   try {
-    const { base64EncodedPhoto, oauthToken } = data
+    const { base64EncodedPhoto, oauthToken, platform } = data
 
     if (!oauthToken) {
       throw new Error('No OAuth token provided')
@@ -20,7 +20,8 @@ module.exports = functions.https.onCall(async (data) => {
 
     await insertPhoto(
       base64EncodedPhoto,
-      await getUserRefFromOAuthToken(oauthToken)
+      await getUserRefFromOAuthToken(oauthToken),
+      platform
     )
 
     return { success: false }

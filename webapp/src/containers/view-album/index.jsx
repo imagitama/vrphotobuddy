@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import LazyLoad from 'react-lazyload'
 import { Helmet } from 'react-helmet'
@@ -9,6 +9,7 @@ import useDatabaseQuery, {
   Operators,
   OrderDirections
 } from '../../hooks/useDatabaseQuery'
+import useDatabaseSave from '../../hooks/useDatabaseSave'
 import {
   CollectionNames,
   PhotoFieldNames,
@@ -28,6 +29,7 @@ import { createRef, getOpenGraphUrlForRouteUrl } from '../../utils'
 import { useParams } from 'react-router'
 import PhotoResults from '../../components/photo-results'
 import NoResultsMessage from '../../components/no-results-message'
+import SuccessMessage from '../../components/success-message'
 
 const useStyles = makeStyles({
   root: {
@@ -74,6 +76,28 @@ const PhotosForAlbum = ({ albumId }) => {
   return <PhotoResults photos={photos} />
 }
 
+function Editor() {
+  const { albumId } = useParams()
+  const [isSaving, isSaveSuccess, isSaveError, save] = useDatabaseSave(
+    CollectionNames.Albums,
+    albumId
+  )
+
+  if (isSaving) {
+    return <LoadingIndicator message="Saving album..." />
+  }
+
+  if (isSaveSuccess) {
+    return <SuccessMessage>Album saved!</SuccessMessage>
+  }
+
+  if (isSaveError) {
+    return <ErrorMessage>Failed to save album</ErrorMessage>
+  }
+
+  return <div>Editor!!!</div>
+}
+
 export default () => {
   const { albumId } = useParams()
   const [, , user] = useUserRecord()
@@ -83,6 +107,7 @@ export default () => {
     { [options.populateRefs]: true }
   )
   const classes = useStyles()
+  const [isEditorVisible, setIsEditorVisible] = useState(false)
 
   if (isLoading || !album) {
     return <LoadingIndicator message="Loading album..." />
@@ -127,6 +152,12 @@ export default () => {
           {description && <Markdown source={description} />}
           <PhotosForAlbum albumId={albumId} />
         </div>
+        {user && (
+          <Button onClick={() => setIsEditorVisible(currentVal => !currentVal)}>
+            Edit
+          </Button>
+        )}
+        {isEditorVisible && <Editor />}
       </div>
     </div>
   )

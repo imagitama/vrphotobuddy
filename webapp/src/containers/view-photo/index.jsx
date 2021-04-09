@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import LazyLoad from 'react-lazyload'
 import { useParams } from 'react-router'
@@ -10,6 +10,7 @@ import useDatabaseQuery, {
   Operators,
   OrderDirections
 } from '../../hooks/useDatabaseQuery'
+import useDatabaseSave from '../../hooks/useDatabaseSave'
 import {
   CollectionNames,
   PhotoFieldNames,
@@ -29,6 +30,7 @@ import ChangeAlbumForm from '../../components/change-album-form'
 import * as routes from '../../routes'
 import { canEditPhoto } from '../../permissions'
 import { createRef, getOpenGraphUrlForRouteUrl } from '../../utils'
+import SuccessMessage from '../../components/success-message'
 
 const useStyles = makeStyles({
   root: {
@@ -46,6 +48,28 @@ const useStyles = makeStyles({
   }
 })
 
+function Editor() {
+  const { photoId } = useParams()
+  const [isSaving, isSaveSuccess, isSaveError, save] = useDatabaseSave(
+    CollectionNames.Photos,
+    photoId
+  )
+
+  if (isSaving) {
+    return <LoadingIndicator message="Saving photo..." />
+  }
+
+  if (isSaveSuccess) {
+    return <SuccessMessage>Photo saved!</SuccessMessage>
+  }
+
+  if (isSaveError) {
+    return <ErrorMessage>Failed to save photo</ErrorMessage>
+  }
+
+  return <div>Editor!!!</div>
+}
+
 export default () => {
   const { photoId } = useParams()
   const [, , user] = useUserRecord()
@@ -55,6 +79,7 @@ export default () => {
     { [options.populateRefs]: true }
   )
   const classes = useStyles()
+  const [isEditorVisible, setIsEditorVisible] = useState(false)
 
   if (isLoading || !photo) {
     return <LoadingIndicator message="Loading photo..." />
@@ -97,7 +122,16 @@ export default () => {
             By {createdBy[UserFieldNames.username]}
           </Heading>
           {description && <Markdown source={description} />}
-          <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />
+          {user && (
+            <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />
+          )}
+          {user && (
+            <Button
+              onClick={() => setIsEditorVisible(currentVal => !currentVal)}>
+              Edit
+            </Button>
+          )}{' '}
+          {isEditorVisible && <Editor />}
         </div>
       </div>
     </div>

@@ -38,7 +38,7 @@ export default ({ onSuccess }) => {
 
   return (
     <>
-      {loginWithDiscordUrl && (
+      {/* {loginWithDiscordUrl && (
         <div className={classes.loginWithDiscordWrapper}>
           <LoginWithDiscordBtn
             url={loginWithDiscordUrl}
@@ -48,7 +48,7 @@ export default ({ onSuccess }) => {
             }
           />
         </div>
-      )}
+      )} */}
       <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={authInstance} />
     </>
   )

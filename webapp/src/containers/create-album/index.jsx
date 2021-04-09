@@ -29,6 +29,10 @@ const useStyles = makeStyles({
     '& img': {
       width: '100%'
     }
+  },
+  field: {
+    width: '100%',
+    marginBottom: '1rem'
   }
 })
 
@@ -94,16 +98,22 @@ export default () => {
         )}
         {isSaveError && <ErrorMessage>Failed to create album</ErrorMessage>}
         Title
+        <br />
         <TextInput
           value={newFields[AlbumFieldNames.title]}
           onChange={e => onFieldChanged(AlbumFieldNames.title, e.target.value)}
+          className={classes.field}
         />
         Description
+        <br />
         <TextInput
           value={newFields[AlbumFieldNames.description]}
           onChange={e =>
             onFieldChanged(AlbumFieldNames.description, e.target.value)
           }
+          className={classes.field}
+          rows={5}
+          multiline
         />
         <Button onClick={onSaveClick}>Create</Button>
       </div>
