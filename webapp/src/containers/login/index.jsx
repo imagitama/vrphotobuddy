@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import firebase from 'firebase/app'
@@ -35,8 +35,7 @@ const redirectToOAuth = async user => {
       auth_token: authToken,
       id_token: await user.getIdToken(),
       success: 'true'
-    }),
-    mode: 'no-cors'
+    })
   })
 
   const data = await response.json()
@@ -50,14 +49,40 @@ export default ({ oauth = false }) => {
   const [, , user] = useUserRecord()
   const queryParams = useQueryParams()
   const { push } = useHistory()
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     if (!oauth || !user) {
       return
     }
 
-    redirectToOAuth(firebase.auth().currentUser)
+    async function main() {
+      try {
+        setIsError(false)
+        setIsLoading(true)
+        await redirectToOAuth(firebase.auth().currentUser)
+        setIsError(false)
+        setIsLoading(false)
+      } catch (err) {
+        console.error(err)
+        setIsError(true)
+        setIsLoading(false)
+      }
+    }
+
+    main()
   }, [user === null])
+
+  if (isLoading) {
+    return <LoadingIndicator message="Redirecting..." />
+  }
+
+  if (isError) {
+    return (
+      <ErrorMessage>Failed to redirect back to the desktop app</ErrorMessage>
+    )
+  }
 
   if (user && !queryParams.get('code')) {
     if (oauth) {
