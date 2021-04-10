@@ -24,7 +24,7 @@ const Albums = () => {
   const [isLoading, isError, results] = useDatabaseQuery(
     CollectionNames.Albums,
     undefined,
-    { [options.populateRefs]: true }
+    { [options.populateRefs]: true, [options.subscribe]: true }
   )
 
   if (isLoading || !results) {

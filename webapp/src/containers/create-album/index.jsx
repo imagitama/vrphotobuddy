@@ -94,9 +94,7 @@ export default () => {
         </div>
         {isSaving && <LoadingIndicator message="Saving..." />}
         {isSaveSuccess && (
-          <SuccessMessage>
-            Album has been created <Button>View Album</Button>
-          </SuccessMessage>
+          <SuccessMessage>Album has been created</SuccessMessage>
         )}
         {isSaveError && <ErrorMessage>Failed to create album</ErrorMessage>}
         Title

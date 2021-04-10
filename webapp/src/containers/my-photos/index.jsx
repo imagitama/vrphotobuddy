@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import useDatabaseQuery, {
   options,
-  Operators
+  Operators,
+  OrderDirections
 } from '../../hooks/useDatabaseQuery'
 import useFirebaseUserId from '../../hooks/useFirebaseUserId'
 import { CollectionNames, PhotoFieldNames } from '../../firestore'
@@ -36,7 +37,11 @@ const Photos = () => {
         createRef(CollectionNames.Users, userId)
       ]
     ],
-    { [options.populateRefs]: true }
+    {
+      [options.populateRefs]: true,
+      [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC],
+      [options.subscribe]: true
+    }
   )
 
   if (isLoading || !results) {

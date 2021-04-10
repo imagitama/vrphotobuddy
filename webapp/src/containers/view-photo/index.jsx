@@ -48,6 +48,8 @@ const useStyles = makeStyles({
     right: 0
   },
   photo: {
+    margin: '0 auto',
+    maxWidth: '1500px',
     '& img': {
       width: '100%'
     }

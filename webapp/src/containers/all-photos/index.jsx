@@ -29,7 +29,8 @@ const Photos = () => {
     undefined,
     {
       [options.populateRefs]: true,
-      [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC]
+      [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC],
+      [options.subscribe]: true
     }
   )
 

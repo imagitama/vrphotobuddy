@@ -62,7 +62,7 @@ const PhotoFieldNames = {
   smallUrl: 'smallUrl',
   title: 'title',
   description: 'description',
-  album: 'album',
+  albums: 'albums',
   privacy: 'privacy', // 0 = public, 1 = private
   status: 'status', // 0 = active, 1 = deleted
   isAdult: 'isAdult',

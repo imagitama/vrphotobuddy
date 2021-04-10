@@ -16,24 +16,25 @@ const base64Encode = async (photoPath) => {
   return new Buffer(bitmap).toString('base64')
 }
 
-const uploadPhotoBuffer = async (photoBuffer) => {
-  console.info('encoding photo...')
+const uploadPhotoBuffer = async (photoBuffer, filename) => {
+  console.info(`encoding photo "${filename}"...`)
 
   // const base64EncodedPhoto = await base64Encode(photoPath)
   const base64EncodedPhoto = photoBuffer.toString('base64')
 
-  console.info('uploading photo...')
+  console.info(`uploading photo "${filename}"...`)
 
   try {
     await callFunction(functionNames.uploadPhoto, {
       base64EncodedPhoto,
       oauthToken: getOAuthToken(),
       platform: 0, // 0 = VRChat, 1 = CVR, 2 = Neos
+      filename,
     })
   } catch (err) {
     if (err.message.includes('OAuth token is invalid or has expired')) {
       await authenticate(true)
-      await uploadPhotoBuffer(photoBuffer)
+      await uploadPhotoBuffer(photoBuffer, filename)
       return
     }
     throw err
@@ -48,22 +49,14 @@ const processPhoto = async (photoPath) => {
   // TODO: Check if a panoramic photo from vrchat
   // TODO: Check if a PNG (user could dump whatever they want in that dir)
 
-  // const outputPath = path.resolve(
-  //   os.tmpdir(),
-  //   TEMP_DIR_NAME,
-  //   path.basename(photoPath).replace('.png', '.webp')
-  // )
-
-  // await webp.cwebp(photoPath, outputPath, '-q 80', (logging = '-v'))
-
   const webpBuffer = await sharp(photoPath)
     .webp({
-      quality: 80,
+      quality: 100,
     })
     .toBuffer()
 
   console.info(`photo converted to webp`)
 
-  await uploadPhotoBuffer(webpBuffer)
+  await uploadPhotoBuffer(webpBuffer, path.basename(photoPath))
 }
 module.exports.processPhoto = processPhoto

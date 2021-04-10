@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -11,6 +11,8 @@ import LazyLoad from 'react-lazyload'
 import * as routes from '../../routes'
 import FormattedDate from '../formatted-date'
 import { mediaQueryForTabletsOrBelow } from '../../media-queries'
+import useFirebaseUserId from '../../hooks/useFirebaseUserId'
+import ChangeAlbumForm from '../change-album-form'
 
 const useStyles = makeStyles({
   root: {
@@ -53,6 +55,25 @@ const useStyles = makeStyles({
     right: 0,
     color: '#FFF',
     padding: '0.5rem'
+  },
+  title: {
+    fontWeight: 'bold',
+    marginBottom: '0.25rem'
+  },
+  owner: {
+    '&:hover $controls': {
+      display: 'block'
+    }
+  },
+  controls: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    display: 'none',
+    padding: '0.5rem'
+  },
+  show: {
+    display: 'block'
   }
 })
 
@@ -61,37 +82,58 @@ function truncateTextAndAddEllipsis(text) {
 }
 
 export default ({
-  photo: { id, sourceUrl, title, description, createdAt }
+  photo: {
+    id,
+    smallUrl,
+    sourceUrl,
+    title,
+    description,
+    albums = [],
+    createdAt,
+    createdBy
+  }
 }) => {
   const classes = useStyles()
   const cardRef = useRef()
+  const userId = useFirebaseUserId()
+  const [showControls, setShowControls] = useState(false)
+
+  const isOwner = userId === createdBy.id
 
   return (
-    <Card className={classes.root} ref={cardRef}>
+    <Card
+      className={`${classes.root} ${isOwner ? classes.owner : ''}`}
+      ref={cardRef}>
       <CardActionArea className={classes.actionArea}>
         <Link
           to={routes.viewPhotoWithVar.replace(':photoId', id)}
           className={classes.link}>
           <LazyLoad width={320} height={240}>
             <div className={classes.imageWrapper}>
-              <img src={sourceUrl} alt="Image for photo" />
+              <img src={smallUrl || sourceUrl} alt="Image for photo" />
             </div>
           </LazyLoad>
           <div className={classes.meta}>
-            <Typography variant="h5" component="h2">
-              {title}
-            </Typography>
+            <div className={classes.title}>{title}</div>
             {createdAt && (
               <div className={classes.date}>
                 <FormattedDate date={createdAt} />
               </div>
             )}
-            <Typography variant="body2" color="textSecondary" component="p">
-              {truncateTextAndAddEllipsis(description)}
-            </Typography>
           </div>
         </Link>
       </CardActionArea>
+      {isOwner && (
+        <div
+          className={`${classes.controls} ${showControls ? classes.show : ''}`}>
+          <ChangeAlbumForm
+            photoId={id}
+            existingAlbumRefs={albums}
+            onOpen={() => setShowControls(true)}
+            onClose={() => setShowControls(false)}
+          />
+        </div>
+      )}
     </Card>
   )
 }

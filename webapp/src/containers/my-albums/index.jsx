@@ -40,7 +40,7 @@ const Albums = () => {
         createRef(CollectionNames.Users, userId)
       ]
     ],
-    { [options.populateRefs]: true }
+    { [options.populateRefs]: true, [options.subscribe]: true }
   )
 
   if (isLoading || !results) {

@@ -62,12 +62,14 @@ export default [
     id: 'my-photos',
     label: 'My Photos',
     url: routes.myPhotos,
-    icon: PhotoIcon
+    icon: PhotoIcon,
+    requiresAuth: true
   },
   {
     id: 'my-albums',
     label: 'My Albums',
     url: routes.myAlbums,
-    icon: PhotoAlbumIcon
+    icon: PhotoAlbumIcon,
+    requiresAuth: true
   }
 ]

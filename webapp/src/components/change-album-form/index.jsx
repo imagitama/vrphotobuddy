@@ -18,7 +18,7 @@ import Dropdown from '../dropdown'
 import useFirebaseUserId from '../../hooks/useFirebaseUserId'
 import { handleError } from '../../error-handling'
 
-export default ({ photoId, existingAlbumRefs }) => {
+export default ({ photoId, existingAlbumRefs, onOpen, onClose }) => {
   const [, , user] = useUserRecord()
   const userId = useFirebaseUserId()
   const [
@@ -89,6 +89,8 @@ export default ({ photoId, existingAlbumRefs }) => {
         label: albumForUser[AlbumFieldNames.title],
         value: albumForUser.id
       }))}
+      onOpen={onOpen}
+      onClose={onClose}
     />
   )
 }
