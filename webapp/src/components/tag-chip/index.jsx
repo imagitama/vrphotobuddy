@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Chip from '@material-ui/core/Chip'
 import { makeStyles } from '@material-ui/core/styles'
-import * as routes from '../../routes'
+// import * as routes from '../../routes'
 
 const useStyles = makeStyles({
   chip: { margin: '0 0.25rem 0.25rem 0' }
@@ -20,7 +20,7 @@ export default ({
   const ChipToRender = () => (
     <Chip
       className={classes.chip}
-      label={tagName}
+      label={`#${tagName}`}
       color={isFilled && !isDisabled ? 'primary' : undefined}
       disabled={isDisabled}
       clickable={!isDisabled}
@@ -32,10 +32,6 @@ export default ({
   if (onClick || isDisabled) {
     return <ChipToRender />
   } else {
-    return (
-      <Link to={routes.viewTagWithVar.replace(':tagName', tagName)}>
-        <ChipToRender />
-      </Link>
-    )
+    return <ChipToRender />
   }
 }

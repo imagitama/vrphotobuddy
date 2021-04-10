@@ -125,6 +125,8 @@ service cloud.firestore {
 
     match /photos/{document=**} {
       allow read;
+      allow update: if (isCreatedBy() || isOwnedBy() || isEditor() || isAdmin()) && isNotBanned();
+      allow create: if isLoggedIn() && isNotBanned();
     }
 
     match /albums/{document=**} {

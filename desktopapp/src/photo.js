@@ -4,7 +4,7 @@ const path = require('path')
 const { promises: fs } = require('fs')
 const sharp = require('sharp')
 const { callFunction, functionNames } = require('./firebase')
-const { getOAuthToken } = require('./auth')
+const { getOAuthToken, authenticate } = require('./auth')
 
 const TEMP_DIR_NAME = 'vrphotobuddy'
 
@@ -24,11 +24,20 @@ const uploadPhotoBuffer = async (photoBuffer) => {
 
   console.info('uploading photo...')
 
-  await callFunction(functionNames.uploadPhoto, {
-    base64EncodedPhoto,
-    oauthToken: getOAuthToken(),
-    platform: 0, // 0 = VRChat, 1 = CVR, 2 = Neos
-  })
+  try {
+    await callFunction(functionNames.uploadPhoto, {
+      base64EncodedPhoto,
+      oauthToken: getOAuthToken(),
+      platform: 0, // 0 = VRChat, 1 = CVR, 2 = Neos
+    })
+  } catch (err) {
+    if (err.message.includes('OAuth token is invalid or has expired')) {
+      await authenticate(true)
+      await uploadPhotoBuffer(photoBuffer)
+      return
+    }
+    throw err
+  }
 
   console.info(`photo has been uploaded successfully`)
 }

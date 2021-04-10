@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import LazyLoad from 'react-lazyload'
 import { useParams } from 'react-router'
 import { Helmet } from 'react-helmet'
+import CreateIcon from '@material-ui/icons/Create'
 
 import useDatabaseQuery, {
   options,
@@ -26,14 +27,19 @@ import Button from '../../components/button'
 import Markdown from '../../components/markdown'
 import Dropdown from '../../components/dropdown'
 import ChangeAlbumForm from '../../components/change-album-form'
+import TextInput from '../../components/text-input'
 
 import * as routes from '../../routes'
 import { canEditPhoto } from '../../permissions'
 import { createRef, getOpenGraphUrlForRouteUrl } from '../../utils'
 import SuccessMessage from '../../components/success-message'
+import useFirebaseUserId from '../../hooks/useFirebaseUserId'
+import { handleError } from '../../error-handling'
+import TagInput from '../../components/tag-input'
+import TagChip from '../../components/tag-chip'
 
 const useStyles = makeStyles({
-  root: {
+  meta: {
     position: 'relative'
   },
   controls: {
@@ -48,12 +54,25 @@ const useStyles = makeStyles({
   }
 })
 
-function Editor() {
+function Editor({ existingFields }) {
   const { photoId } = useParams()
+  const userId = useFirebaseUserId()
   const [isSaving, isSaveSuccess, isSaveError, save] = useDatabaseSave(
     CollectionNames.Photos,
     photoId
   )
+  const [newFields, setNewFields] = useState({
+    [PhotoFieldNames.title]: existingFields[PhotoFieldNames.title],
+    [PhotoFieldNames.description]: existingFields[PhotoFieldNames.description],
+    [PhotoFieldNames.tags]: existingFields[PhotoFieldNames.tags]
+  })
+  const classes = useStyles()
+
+  const onFieldChanged = (fieldName, newVal) =>
+    setNewFields(currentVal => ({
+      ...currentVal,
+      [fieldName]: newVal
+    }))
 
   if (isSaving) {
     return <LoadingIndicator message="Saving photo..." />
@@ -67,7 +86,58 @@ function Editor() {
     return <ErrorMessage>Failed to save photo</ErrorMessage>
   }
 
-  return <div>Editor!!!</div>
+  const onSaveClick = async () => {
+    try {
+      await save({
+        ...newFields,
+        [PhotoFieldNames.lastModifiedAt]: new Date(),
+        [PhotoFieldNames.lastModifiedBy]: createRef(
+          CollectionNames.Users,
+          userId
+        )
+      })
+    } catch (err) {
+      console.error(err)
+      handleError(err)
+    }
+  }
+
+  return (
+    <div>
+      {isSaving && <LoadingIndicator message="Saving..." />}
+      {isSaveSuccess && (
+        <SuccessMessage>
+          Album has been created <Button>View Album</Button>
+        </SuccessMessage>
+      )}
+      {isSaveError && <ErrorMessage>Failed to create album</ErrorMessage>}
+      Title
+      <br />
+      <TextInput
+        value={newFields[PhotoFieldNames.title]}
+        onChange={e => onFieldChanged(PhotoFieldNames.title, e.target.value)}
+        className={classes.field}
+      />
+      Description
+      <br />
+      <TextInput
+        value={newFields[PhotoFieldNames.description]}
+        onChange={e =>
+          onFieldChanged(PhotoFieldNames.description, e.target.value)
+        }
+        className={classes.field}
+        rows={5}
+        multiline
+      />
+      Tags
+      <br />
+      <TagInput
+        currentTags={newFields[PhotoFieldNames.tags]}
+        onChange={newTags => onFieldChanged(PhotoFieldNames.tags, newTags)}
+      />
+      <Button onClick={onSaveClick}>Save</Button>
+    </div>
+  )
 }
 
 export default () => {
@@ -76,7 +146,7 @@ export default () => {
   const [isLoading, isError, photo] = useDatabaseQuery(
     CollectionNames.Photos,
     photoId,
-    { [options.populateRefs]: true }
+    { [options.populateRefs]: true, [options.subscribe]: true }
   )
   const classes = useStyles()
   const [isEditorVisible, setIsEditorVisible] = useState(false)
@@ -89,7 +159,7 @@ export default () => {
     return <ErrorMessage>Failed to load photo</ErrorMessage>
   }
 
-  const { title, description, albums = [], sourceUrl, createdBy } = photo
+  const { title, description, albums = [], sourceUrl, tags, createdBy } = photo
 
   const hasPermissionToEdit = canEditPhoto(user, photo)
 
@@ -122,16 +192,22 @@ export default () => {
             By {createdBy[UserFieldNames.username]}
           </Heading>
           {description && <Markdown source={description} />}
-          {user && (
-            <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />
-          )}
-          {user && (
-            <Button
-              onClick={() => setIsEditorVisible(currentVal => !currentVal)}>
-              Edit
-            </Button>
-          )}{' '}
-          {isEditorVisible && <Editor />}
+          {tags.map(tagName => (
+            <TagChip key={tagName} tagName={tagName} />
+          ))}
+          <div className={classes.controls}>
+            {user && (
+              <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />
+            )}{' '}
+            {user && (
+              <Button
+                onClick={() => setIsEditorVisible(currentVal => !currentVal)}
+                icon={<CreateIcon />}>
+                Edit
+              </Button>
+            )}
+          </div>
+          {isEditorVisible && <Editor existingFields={photo} />}
         </div>
       </div>
     </div>

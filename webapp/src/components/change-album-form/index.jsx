@@ -6,14 +6,21 @@ import useDatabaseQuery, {
   options
 } from '../../hooks/useDatabaseQuery'
 import useDatabaseSave from '../../hooks/useDatabaseSave'
-import { CollectionNames, AlbumFieldNames } from '../../firestore'
+import {
+  CollectionNames,
+  AlbumFieldNames,
+  PhotoFieldNames
+} from '../../firestore'
 import { createRef } from '../../utils'
 import LoadingIndicator from '../loading-indicator'
 import ErrorMessage from '../error-message'
 import Dropdown from '../dropdown'
+import useFirebaseUserId from '../../hooks/useFirebaseUserId'
+import { handleError } from '../../error-handling'
 
 export default ({ photoId, existingAlbumRefs }) => {
   const [, , user] = useUserRecord()
+  const userId = useFirebaseUserId()
   const [
     isLoadingAlbums,
     isErrorLoadingAlbums,
@@ -39,7 +46,31 @@ export default ({ photoId, existingAlbumRefs }) => {
   )
   const [newAlbumIds, setNewAlbumIds] = useState([])
 
-  const updateAlbumsForPhoto = async () => {}
+  const updateAlbumsForPhoto = async albumIdAddedOrRemoved => {
+    try {
+      // if (onSaveClick) {
+      //   onSaveClick()
+      // }
+
+      await save({
+        [PhotoFieldNames.albums]: existingAlbumRefs.find(
+          ref => ref.id === albumIdAddedOrRemoved
+        )
+          ? existingAlbumRefs.filter(ref => ref.id !== albumIdAddedOrRemoved)
+          : existingAlbumRefs.concat([
+              createRef(CollectionNames.Albums, albumIdAddedOrRemoved)
+            ]),
+        [PhotoFieldNames.lastModifiedBy]: createRef(
+          CollectionNames.Users,
+          userId
+        ),
+        [PhotoFieldNames.lastModifiedAt]: new Date()
+      })
+    } catch (err) {
+      console.error('Failed to save photo to database', err)
+      handleError(err)
+    }
+  }
 
   if (isLoadingAlbums || !albumsForUser) {
     return <LoadingIndicator message="Loading albums..." />

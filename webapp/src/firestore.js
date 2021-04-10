@@ -110,7 +110,7 @@ export const PhotoFieldNames = {
   status: 'status', // 0 = active, 1 = deleted
   isAdult: 'isAdult',
   tags: 'tags',
-  album: 'album',
+  albums: 'albums',
   lastModifiedBy: 'lastModifiedBy',
   lastModifiedAt: 'lastModifiedAt',
   createdBy: 'createdBy',

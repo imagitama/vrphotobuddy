@@ -49,11 +49,11 @@ const useStyles = makeStyles({
 
 const PhotosForAlbum = ({ albumId }) => {
   const [isLoading, isError, photos] = useDatabaseQuery(
-    CollectionNames.Albums,
+    CollectionNames.Photos,
     [
       [
-        PhotoFieldNames.album,
-        Operators.EQUALS,
+        PhotoFieldNames.albums,
+        Operators.ARRAY_CONTAINS,
         createRef(CollectionNames.Albums, albumId)
       ]
     ],

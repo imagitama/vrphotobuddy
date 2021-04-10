@@ -15,6 +15,7 @@ import TextInput from '../../components/text-input'
 
 import * as routes from '../../routes'
 import { createRef, getOpenGraphUrlForRouteUrl } from '../../utils'
+import { handleError } from '../../error-handling'
 
 const useStyles = makeStyles({
   root: {
@@ -63,6 +64,7 @@ export default () => {
       })
     } catch (err) {
       console.error(err)
+      handleError(err)
     }
   }
 

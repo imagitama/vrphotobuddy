@@ -78,11 +78,15 @@ const getIsTokenValid = async (token) => {
 
 const convertMinutesToMilliseconds = (mins) => mins * 60 * 1000
 
-const authenticate = async () => {
+const authenticate = async (forceNeedsNewToken = false) => {
   console.info(`authenticating...`)
 
+  if (forceNeedsNewToken) {
+    console.info('forcing a new token')
+  }
+
   const storedOAuthToken = await storage.getItem(storageKeyOAuthToken)
-  let needsNewToken = false
+  let needsNewToken = forceNeedsNewToken
 
   if (storedOAuthToken) {
     console.info(`found existing token: ${storedOAuthToken}`)
