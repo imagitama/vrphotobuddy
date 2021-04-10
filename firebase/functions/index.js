@@ -23,6 +23,8 @@ exports.garbageCollection = garbageCollection()
 
 // photos
 exports.uploadPhoto = require('./src/functions/uploadPhoto')
+exports.syncPhotoList = require('./src/functions/syncPhotoList')
+exports.hydratePhotoListOnPhotoUpload = require('./src/functions/hydratePhotoListOnPhotoUpload')
 
 const functions = require('firebase-functions')
 const express = require('express')

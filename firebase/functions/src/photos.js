@@ -115,3 +115,19 @@ const insertPhoto = async (
   })
 }
 module.exports.insertPhoto = insertPhoto
+
+const hydratePhotoList = async () => {
+  console.debug('hydrating photo list...')
+
+  // TODO: Only get public and non deleted photos
+  const { docs: allPhotos } = await db.collection(CollectionNames.Photos).get()
+
+  const ids = allPhotos.map((photo) => photo.id)
+
+  console.debug(`found ${ids.length} photo ids`)
+
+  await db.collection(CollectionNames.Special).doc('all-photo-ids').set({
+    ids,
+  })
+}
+module.exports.hydratePhotoList = hydratePhotoList

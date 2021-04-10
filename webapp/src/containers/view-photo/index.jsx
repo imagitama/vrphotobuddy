@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import LazyLoad from 'react-lazyload'
-import { useParams } from 'react-router'
+import { useParams, useHistory } from 'react-router'
 import { Helmet } from 'react-helmet'
 import CreateIcon from '@material-ui/icons/Create'
 
@@ -39,6 +39,9 @@ import TagInput from '../../components/tag-input'
 import TagChip from '../../components/tag-chip'
 
 const useStyles = makeStyles({
+  root: {
+    position: 'relative'
+  },
   meta: {
     position: 'relative'
   },
@@ -53,6 +56,16 @@ const useStyles = makeStyles({
     '& img': {
       width: '100%'
     }
+  },
+  control: {
+    position: 'absolute',
+    top: 0
+  },
+  prev: {
+    left: 0
+  },
+  next: {
+    right: 0
   }
 })
 
@@ -142,6 +155,36 @@ function Editor({ existingFields }) {
   )
 }
 
+const getPrevId = (photoId, specialResult) => {
+  if (!specialResult) {
+    return null
+  }
+
+  const idx = specialResult.ids.indexOf(photoId)
+
+  if (idx === 0) {
+    return null
+  }
+
+  return specialResult.ids[idx - 1]
+}
+
+const getNextId = (photoId, specialResult) => {
+  if (!specialResult) {
+    return null
+  }
+
+  const idx = specialResult.ids.indexOf(photoId)
+
+  console.log('here', idx)
+
+  if (idx === specialResult.ids.length - 1) {
+    return null
+  }
+
+  return specialResult.ids[idx + 1]
+}
+
 export default () => {
   const { photoId } = useParams()
   const [, , user] = useUserRecord()
@@ -150,8 +193,13 @@ export default () => {
     photoId,
     { [options.populateRefs]: true, [options.subscribe]: true }
   )
+  const [, , specialResult] = useDatabaseQuery(
+    CollectionNames.Special,
+    'all-photo-ids'
+  )
   const classes = useStyles()
   const [isEditorVisible, setIsEditorVisible] = useState(false)
+  const { push } = useHistory()
 
   if (isLoading || !photo) {
     return <LoadingIndicator message="Loading photo..." />
@@ -164,6 +212,14 @@ export default () => {
   const { title, description, albums = [], sourceUrl, tags, createdBy } = photo
 
   const hasPermissionToEdit = canEditPhoto(user, photo)
+
+  const prevId = getPrevId(photoId, specialResult)
+  const nextId = getNextId(photoId, specialResult)
+
+  console.log(nextId, prevId, specialResult, photoId)
+
+  const goNext = () => push(routes.viewPhotoWithVar.replace(':photoId', nextId))
+  const goPrev = () => push(routes.viewPhotoWithVar.replace(':photoId', prevId))
 
   return (
     <div className={classes.root}>
@@ -185,6 +241,16 @@ export default () => {
         <meta property="og:site_name" content="vrphotobuddy" />
       </Helmet>
       <div>
+        {prevId !== null && (
+          <div className={`${classes.control} ${classes.prev}`}>
+            <Button onClick={goPrev}>{'<'}</Button>
+          </div>
+        )}
+        {nextId !== null && (
+          <div className={`${classes.control} ${classes.next}`}>
+            <Button onClick={goNext}>{'>'}</Button>
+          </div>
+        )}
         <div className={classes.photo}>
           <img src={sourceUrl} />
         </div>
@@ -210,6 +276,7 @@ export default () => {
             )}
           </div>
           {isEditorVisible && <Editor existingFields={photo} />}
+          {}
         </div>
       </div>
     </div>
