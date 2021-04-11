@@ -273,7 +273,7 @@ export default () => {
           name="description"
           content={`View the photo ${title || defaultTitle}`}
         />
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={title || defaultTitle} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={sourceUrl} />
         <meta
@@ -334,17 +334,19 @@ export default () => {
           {tags.map(tagName => (
             <TagChip key={tagName} tagName={tagName} />
           ))}
-          {user && (
-            <div className={classes.controls}>
-              <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />{' '}
-              <Button
-                onClick={() => setIsEditorVisible(currentVal => !currentVal)}
-                icon={<CreateIcon />}>
-                Edit
-              </Button>{' '}
-              <TogglePrivacyBtn photoId={photoId} currentPrivacy={privacy} />
-            </div>
-          )}
+          <div className={classes.controls}>
+            {user && (
+              <>
+                <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />{' '}
+                <Button
+                  onClick={() => setIsEditorVisible(currentVal => !currentVal)}
+                  icon={<CreateIcon />}>
+                  Edit
+                </Button>{' '}
+                <TogglePrivacyBtn photoId={photoId} currentPrivacy={privacy} />
+              </>
+            )}
+          </div>
           {isEditorVisible && <Editor existingFields={photo} />}
         </div>
       </div>
