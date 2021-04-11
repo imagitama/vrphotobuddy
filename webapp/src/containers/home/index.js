@@ -6,7 +6,8 @@ import { Helmet } from 'react-helmet'
 import useSearchTerm from '../../hooks/useSearchTerm'
 import useDatabaseQuery, {
   options,
-  OrderDirections
+  OrderDirections,
+  Operators
 } from '../../hooks/useDatabaseQuery'
 
 import { CollectionNames, PhotoFieldNames } from '../../firestore'
@@ -28,10 +29,21 @@ const useStyles = makeStyles({
 export default () => {
   const classes = useStyles()
   const searchTerm = useSearchTerm()
-  const [, , results] = useDatabaseQuery(CollectionNames.Photos, [], {
-    [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC],
-    [options.limit]: 5
-  })
+  const [, , results] = useDatabaseQuery(
+    CollectionNames.Photos,
+    [
+      [
+        PhotoFieldNames.privacy,
+        Operators.EQUALS,
+        0 // public
+      ]
+    ],
+    {
+      [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC],
+      [options.limit]: 5,
+      [options.subscribe]: true
+    }
+  )
 
   if (searchTerm) {
     return null
