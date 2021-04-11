@@ -18,6 +18,13 @@ const useStyles = makeStyles({
     position: 'absolute',
     top: 0,
     right: 0
+  },
+  scrollMessage: {
+    padding: '2rem 0 0',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: '150%'
   }
 })
 
@@ -31,6 +38,7 @@ const Photos = () => {
     PhotoFieldNames.createdAt,
     OrderDirections.DESC
   ])
+  const classes = useStyles()
 
   // if (isLoading || !results) {
   //   return <LoadingIndicator message="Loading photos..." />
@@ -50,11 +58,11 @@ const Photos = () => {
       {isLoading ? (
         <LoadingIndicator message="Loading photos..." />
       ) : (
-        <Message style={styles.BG}>
+        <div className={classes.scrollMessage}>
           {isAtEndOfQuery
             ? 'No more photos found'
             : 'Scroll to load more photos'}
-        </Message>
+        </div>
       )}
     </>
   )
