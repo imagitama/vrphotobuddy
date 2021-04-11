@@ -256,7 +256,8 @@ export default () => {
   return (
     <div className={classes.root}>
       <Helmet>
-        <title>{`${title || defaultTitle} | View photo | vrphotobuddy`}</title>
+        <title>{`${title ||
+          defaultTitle} | View photo | VR Photo Buddy`}</title>
         <meta name="description" content={`View the photo ${title}`} />
         <meta property="og:title" content={title} />
         <meta property="og:type" content="website" />
@@ -270,7 +271,7 @@ export default () => {
             routes.viewPhotoWithVar.replace(':photoId', photoId)
           )}
         />
-        <meta property="og:site_name" content="vrphotobuddy" />
+        <meta property="og:site_name" content="VR Photo Buddy" />
       </Helmet>
       <div>
         <div className={classes.photo}>

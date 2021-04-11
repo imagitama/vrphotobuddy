@@ -71,7 +71,7 @@ export default ({
   return (
     <>
       <Helmet>
-        <title>Browse everything with tag "{tagName}" | vrphotobuddy</title>
+        <title>Browse everything with tag "{tagName}" | VR Photo Buddy</title>
         <meta
           name="description"
           content={`Browse all of the accessories, tutorials, animations, avatars and news articles with the tag ${tagName}`}

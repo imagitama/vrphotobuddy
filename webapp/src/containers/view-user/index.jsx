@@ -1,6 +1,5 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import LazyLoad from 'react-lazyload'
 import { Helmet } from 'react-helmet'
 
 import useDatabaseQuery, {
@@ -9,8 +8,7 @@ import useDatabaseQuery, {
   Operators,
   OrderDirections
 } from '../../hooks/useDatabaseQuery'
-import { CollectionNames, PhotoFieldNames } from '../../firestore'
-import useUserRecord from '../../hooks/useUserRecord'
+import { CollectionNames } from '../../firestore'
 
 import LoadingIndicator from '../../components/loading-indicator'
 import ErrorMessage from '../../components/error-message'
@@ -69,7 +67,7 @@ export default () => {
   return (
     <div className={classes.root}>
       <Helmet>
-        <title>{`${username} | View user | vrphotobuddy`}</title>
+        <title>{`${username} | View user | VR Photo Buddy`}</title>
         <meta name="description" content={`View the user ${username}`} />
         <meta property="og:title" content={username} />
         <meta property="og:type" content="website" />
@@ -83,7 +81,7 @@ export default () => {
             routes.viewUserWithVar.replace(':userId', userId)
           )}
         />
-        <meta property="og:site_name" content="vrphotobuddy" />
+        <meta property="og:site_name" content="VR Photo Buddy" />
       </Helmet>
       <div>
         <div className={classes.meta}>

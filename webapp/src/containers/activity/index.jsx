@@ -351,7 +351,7 @@ export default () => {
   return (
     <>
       <Helmet>
-        <title>View the recent activity around the site | vrphotobuddy</title>
+        <title>View the recent activity around the site | VR Photo Buddy</title>
         <meta
           name="description"
           content="Take a look at the actions performed by users on the site including editing assets, profiles and more."

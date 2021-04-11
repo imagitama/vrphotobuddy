@@ -207,7 +207,7 @@ export default () => {
             routes.viewAlbumWithVar.replace(':albumId', albumId)
           )}
         />
-        <meta property="og:site_name" content="vrphotobuddy" />
+        <meta property="og:site_name" content="VR Photo Buddy" />
       </Helmet>
       <div>
         <div className={classes.photo}>

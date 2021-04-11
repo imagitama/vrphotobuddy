@@ -105,10 +105,9 @@ export default ({ oauth = false }) => {
   return (
     <>
       <Helmet>
-        <title>Login | vrphotobuddy</title>
+        <title>Login | VR Photo Buddy</title>
         <meta name="description" content={`Log in to the site.`} />
       </Helmet>
-      <Heading variant="h1">Login</Heading>
       <LoginForm
         onSuccess={async authResult => {
           trackAction('Login', 'Click login button')

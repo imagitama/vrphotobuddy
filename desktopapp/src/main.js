@@ -30,8 +30,6 @@ async function main() {
 
     await loadConfig()
 
-    await storage.init()
-
     await authenticate()
 
     startWatching()

@@ -6,7 +6,7 @@ import Heading from '../../components/heading'
 export default () => (
   <>
     <Helmet>
-      <title>Privacy Policy | vrphotobuddy</title>
+      <title>Privacy Policy | VR Photo Buddy</title>
       <meta
         name="description"
         content={`Read the privacy policy for the site.`}

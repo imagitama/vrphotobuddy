@@ -36,12 +36,11 @@ export default () => {
     <>
       <Helmet>
         <title>
-          View a list of users that are signed up on the site |
-          VRvrphotobuddyCArena
+          View a list of users that are signed up on the site | VR Photo Buddy
         </title>
         <meta
           name="description"
-          content={`Find every user that has signed up to vrphotobuddy with a different category for staff members to help you connect with them.`}
+          content={`Find every user that has signed up to VR Photo Buddy with a different category for staff members to help you connect with them.`}
         />
       </Helmet>
       <Heading variant="h1">All Users</Heading>

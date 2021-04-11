@@ -99,7 +99,7 @@ export default () => {
   return (
     <>
       <Helmet>
-        <title>Browse tags | vrphotobuddy</title>
+        <title>Browse tags | VR Photo Buddy</title>
         <meta
           name="description"
           content={`See a list of all of the popular tags used on the site.`}

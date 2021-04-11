@@ -71,7 +71,7 @@ export default () => {
   return (
     <div className={classes.root}>
       <Helmet>
-        <title>{`Create album | vrphotobuddy`}</title>
+        <title>{`Create album | VR Photo Buddy`}</title>
         <meta
           name="description"
           content={`Create a new album for your photos.`}
@@ -86,7 +86,7 @@ export default () => {
           property="og:url"
           content={getOpenGraphUrlForRouteUrl(routes.createAlbum)}
         />
-        <meta property="og:site_name" content="vrphotobuddy" />
+        <meta property="og:site_name" content="VR Photo Buddy" />
       </Helmet>
       <div>
         <div className={classes.meta}>
