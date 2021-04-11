@@ -46,6 +46,7 @@ const useStyles = makeStyles({
     right: 0
   },
   photo: {
+    position: 'relative',
     margin: '0 auto',
     padding: '0 100px',
     maxWidth: '1500px',
@@ -77,6 +78,10 @@ const useStyles = makeStyles({
     position: 'absolute',
     top: 0,
     left: 0
+  },
+  field: {
+    width: '100%',
+    marginBottom: '1rem'
   }
 })
 
@@ -128,6 +133,8 @@ function Editor({ existingFields }) {
     }
   }
 
+  console.log('newFields', newFields)
+
   return (
     <div>
       {isSaving && <LoadingIndicator message="Saving..." />}
@@ -161,6 +168,8 @@ function Editor({ existingFields }) {
         currentTags={newFields[PhotoFieldNames.tags]}
         onChange={newTags => onFieldChanged(PhotoFieldNames.tags, newTags)}
       />
+      <br />
+      <br />
       <Button onClick={onSaveClick}>Save</Button>
     </div>
   )
@@ -266,21 +275,21 @@ export default () => {
         <meta property="og:site_name" content="vrphotobuddy" />
       </Helmet>
       <div>
-        {prevId !== null && (
-          <div
-            className={`${classes.control} ${classes.prev}`}
-            onClick={goPrev}>
-            <ChevronLeftIcon />
-          </div>
-        )}
-        {nextId !== null && (
-          <div
-            className={`${classes.control} ${classes.next}`}
-            onClick={goNext}>
-            <ChevronRightIcon />
-          </div>
-        )}
         <div className={classes.photo}>
+          {prevId !== null && (
+            <div
+              className={`${classes.control} ${classes.prev}`}
+              onClick={goPrev}>
+              <ChevronLeftIcon />
+            </div>
+          )}
+          {nextId !== null && (
+            <div
+              className={`${classes.control} ${classes.next}`}
+              onClick={goNext}>
+              <ChevronRightIcon />
+            </div>
+          )}
           <div className={classes.photoWrapper}>
             <img
               src={placeholderUrl}
@@ -316,7 +325,6 @@ export default () => {
             )}
           </div>
           {isEditorVisible && <Editor existingFields={photo} />}
-          {}
         </div>
       </div>
     </div>

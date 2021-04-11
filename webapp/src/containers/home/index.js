@@ -27,7 +27,8 @@ export default () => {
   const classes = useStyles()
   const searchTerm = useSearchTerm()
   const [, , results] = useDatabaseQuery(CollectionNames.Photos, [], {
-    [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC]
+    [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC],
+    [options.limit]: 5
   })
 
   if (searchTerm) {

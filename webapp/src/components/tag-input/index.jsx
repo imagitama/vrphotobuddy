@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 
 import TagChip from '../tag-chip'
 import Button from '../button'
-import { cleanupTags, popularTagsByCategory } from '../../utils/tags'
+import { cleanupTags } from '../../utils/tags'
 
 const useStyles = makeStyles({
   textInput: {
@@ -26,6 +26,21 @@ const mergeInNewTags = (currentTags, newTags) => {
   return mergedTags.filter((tag, idx) => mergedTags.indexOf(tag) === idx)
 }
 
+const popularTagGroups = [
+  {
+    label: 'Descriptive',
+    tags: ['cute', 'funny', 'lewd']
+  },
+  {
+    label: 'Avatar species',
+    tags: ['awtter', 'canis_woof', 'rexouium', 'avali', 'shiba']
+  },
+  {
+    label: 'World',
+    tags: ['meroom', 'summer_solitude']
+  }
+]
+
 // NOTE: onChange does not cleanup tags for you (onDone does)
 export default ({ currentTags = [], onChange, onDone, showInfo = true }) => {
   const classes = useStyles()
@@ -38,47 +53,35 @@ export default ({ currentTags = [], onChange, onDone, showInfo = true }) => {
   }, [currentTags ? currentTags.join('+') : null])
 
   const onClickPopularTag = tag =>
-    setNewTags(currentVal => currentVal.concat([tag]))
+    setNewTags(currentVal => {
+      const newVal = currentVal.concat([tag])
+      onChange(newVal)
+      return newVal
+    })
   const onClickExistingTag = tag =>
     setNewTags(currentVal => currentVal.filter(item => item !== tag))
 
   return (
     <>
-      {showInfo && (
-        <>
-          Use tags to help people find your asset. Rules:
-          <ul>
-            <li>
-              tag what you know from the description/source (eg. "quest" if
-              quest compatible)
-            </li>
-            <li>
-              tag what you can see in the images (eg. "hat" if it comes with a
-              hat)
-            </li>
-            <li>do not use spaces (use underscores)</li>
-            <li>one tag per line</li>
-            <li>all lowercase</li>
-          </ul>
-          Popular tags:
+      <br />
+      <strong>One tag per line</strong>
+      <br />
+      <br />
+      Popular tags:
+      {popularTagGroups.map(({ label, tags }) => (
+        <Fragment key={label}>
           <br />
-          {Object.entries(popularTagsByCategory).map(([category, tags]) => (
-            <>
-              {category}
-              <div>
-                {tags.map(tagName => (
-                  <TagChip
-                    key={tagName}
-                    tagName={tagName}
-                    isDisabled={newTags.includes(tagName)}
-                    onClick={() => onClickPopularTag(tagName)}
-                  />
-                ))}
-              </div>
-            </>
+          {label}:
+          {tags.map(tag => (
+            <TagChip
+              key={tag}
+              tagName={tag}
+              onClick={() => onClickPopularTag(tag)}
+            />
           ))}
-        </>
-      )}
+        </Fragment>
+      ))}
+      <br />
       <TextField
         variant="outlined"
         className={classes.textInput}

@@ -31,6 +31,7 @@ export default ({
       </Button>
       <Menu
         anchorEl={() => buttonRef.current}
+        getContentAnchorEl={null}
         open={isOpen}
         anchorOrigin={{
           vertical: 'bottom',
