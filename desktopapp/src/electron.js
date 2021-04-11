@@ -4,6 +4,13 @@ const log = require('electron-log')
 
 Object.assign(console, log.functions)
 
+// prevent multiple instances
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  console.log('only one instance of electron is allowed - closing')
+  app.quit()
+}
+
 let tray = null
 app.whenReady().then(() => {
   tray = new Tray(path.resolve(app.getAppPath(), 'resources/icon.png'))
