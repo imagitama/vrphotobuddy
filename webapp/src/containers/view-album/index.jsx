@@ -186,7 +186,7 @@ export default () => {
     return <ErrorMessage>Failed to load album</ErrorMessage>
   }
 
-  const { title, description, sourceUrl, createdBy, tags } = album
+  const { title, description, sourceUrl, createdBy, tags = [] } = album
 
   // const hasPermissionToEdit = canEditPhoto(user)
 
