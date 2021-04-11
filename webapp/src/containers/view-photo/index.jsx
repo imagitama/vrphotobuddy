@@ -133,8 +133,6 @@ function Editor({ existingFields }) {
     }
   }
 
-  console.log('newFields', newFields)
-
   return (
     <div>
       {isSaving && <LoadingIndicator message="Saving..." />}

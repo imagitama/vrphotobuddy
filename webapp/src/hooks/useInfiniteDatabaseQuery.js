@@ -15,8 +15,6 @@ function getUpdateResultsDependency(queryResults) {
 }
 
 function getWhichSnapshotToStartAfter(pageNumber, resultsByPageNumber) {
-  console.debug('getWhichSnapshotToStartAfter', pageNumber, resultsByPageNumber)
-
   if (pageNumber === 1) {
     return undefined
   }
