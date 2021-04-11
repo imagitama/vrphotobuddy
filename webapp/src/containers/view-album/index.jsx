@@ -62,9 +62,14 @@ const PhotosForAlbum = ({ albumId }) => {
         PhotoFieldNames.albums,
         Operators.ARRAY_CONTAINS,
         createRef(CollectionNames.Albums, albumId)
+      ],
+      [
+        PhotoFieldNames.privacy,
+        Operators.EQUALS,
+        0 // public
       ]
     ],
-    { [options.populateRefs]: true }
+    { [options.populateRefs]: true, [options.subscribe]: true }
   )
   const classes = useStyles()
 

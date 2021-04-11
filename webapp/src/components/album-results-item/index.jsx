@@ -7,12 +7,13 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import LazyLoad from 'react-lazyload'
+import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum'
 
 import * as routes from '../../routes'
 import FormattedDate from '../formatted-date'
 import { mediaQueryForTabletsOrBelow } from '../../media-queries'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '200px',
     margin: '0.5rem',
@@ -40,8 +41,24 @@ const useStyles = makeStyles({
       height: '160px'
     },
     flexShrink: 0
+  },
+  cover: {
+    textAlign: 'center',
+    padding: '2rem 0',
+    background: theme.palette.primary.main,
+    '& svg': {
+      color: '#FFF',
+      fontSize: '500%'
+    }
+  },
+  date: {
+    margin: '0.25rem 0',
+    color: 'rgba(255, 255, 255, 0.4)'
+  },
+  cardContent: {
+    paddingBottom: `${theme.spacing(2)}px !important`
   }
-})
+}))
 
 function truncateTextAndAddEllipsis(text) {
   return text && text.length >= 100 ? `${text.slice(0, 100)}...` : text
@@ -59,14 +76,10 @@ export default ({
         <Link
           to={routes.viewAlbumWithVar.replace(':albumId', id)}
           className={classes.link}>
-          <LazyLoad width={200} height={200}>
-            <CardMedia
-              className={classes.media}
-              image={coverImageUrl}
-              title={`Thumbnail for ${title}`}
-            />
-          </LazyLoad>
-          <CardContent>
+          <div className={classes.cover}>
+            <PhotoAlbumIcon />
+          </div>
+          <CardContent className={classes.cardContent}>
             <Typography variant="h5" component="h2">
               {title}
             </Typography>

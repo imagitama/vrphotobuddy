@@ -239,7 +239,8 @@ export const options = {
   subscribe: 'subscribe',
   startAfter: 'startAfter',
   populateRefs: 'populateRefs',
-  queryName: 'queryName'
+  queryName: 'queryName',
+  onSubscribe: 'onSubscribe'
 }
 
 const getOptionsIfProvided = maybeOptions => {
@@ -289,7 +290,8 @@ export default (
           limitAsString,
           orderByAsString,
           startAfterAsString,
-          options.queryName
+          options.queryName,
+          options.onSubscribe
         )
       }
 
@@ -332,18 +334,26 @@ export default (
       }
 
       async function processResults(results) {
+        let newRecords
+
         if (isGettingSingleRecord) {
-          setRecordOrRecords(
-            await formatRawDoc(results, true, options.populateRefs)
-          )
+          newRecords = await formatRawDoc(results, true, options.populateRefs)
         } else {
-          setRecordOrRecords(
-            await formatRawDocs(results.docs, true, options.populateRefs)
+          newRecords = await formatRawDocs(
+            results.docs,
+            true,
+            options.populateRefs
           )
         }
 
+        setRecordOrRecords(newRecords)
+
         setIsLoading(false)
         setIsErrored(false)
+
+        if (options.onSubscribe) {
+          options.onSubscribe(newRecords)
+        }
       }
 
       if (options.subscribe) {

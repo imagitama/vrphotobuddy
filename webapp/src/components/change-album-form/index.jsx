@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum'
 
 import useUserRecord from '../../hooks/useUserRecord'
 import useDatabaseQuery, {
@@ -18,7 +19,13 @@ import Dropdown from '../dropdown'
 import useFirebaseUserId from '../../hooks/useFirebaseUserId'
 import { handleError } from '../../error-handling'
 
-export default ({ photoId, existingAlbumRefs = [], onOpen, onClose }) => {
+export default ({
+  photoId,
+  existingAlbumRefs = [],
+  onOpen,
+  onClose,
+  hideLabel = false
+}) => {
   const [, , user] = useUserRecord()
   const userId = useFirebaseUserId()
   const [
@@ -86,7 +93,15 @@ export default ({ photoId, existingAlbumRefs = [], onOpen, onClose }) => {
 
   return (
     <Dropdown
-      label={isSaving ? 'Saving...' : `Change Albums`}
+      label={
+        hideLabel ? (
+          <PhotoAlbumIcon />
+        ) : isSaving ? (
+          'Saving...'
+        ) : (
+          `Change Albums`
+        )
+      }
       selectedValues={existingAlbumRefs.map(albumRef => albumRef.id)}
       onClickWithValue={albumId => updateAlbumsForPhoto(albumId)}
       options={albumsForUser.map(albumForUser => ({

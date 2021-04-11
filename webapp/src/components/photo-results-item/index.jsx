@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import LazyLoad from 'react-lazyload'
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import * as routes from '../../routes'
 import { mediaQueryForTabletsOrBelow } from '../../media-queries'
@@ -15,6 +16,8 @@ import placeholderUrl from '../../assets/images/placeholder-photo.webp'
 
 import ChangeAlbumForm from '../change-album-form'
 import FormattedDate from '../formatted-date'
+import TogglePrivacyBtn from '../toggle-privacy-btn'
+import { PhotoFieldNames } from '../../firestore'
 
 const useStyles = makeStyles({
   root: {
@@ -82,6 +85,12 @@ const useStyles = makeStyles({
     position: 'absolute',
     top: 0,
     left: 0
+  },
+  icons: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    padding: '0.5rem'
   }
 })
 
@@ -95,8 +104,8 @@ export default ({
     smallUrl,
     sourceUrl,
     title,
-    description,
     albums = [],
+    [PhotoFieldNames.privacy]: privacy,
     createdAt,
     createdBy
   }
@@ -148,9 +157,16 @@ export default ({
             existingAlbumRefs={albums}
             onOpen={() => setShowControls(true)}
             onClose={() => setShowControls(false)}
-          />
+            hideLabel
+          />{' '}
+          <TogglePrivacyBtn photoId={id} currentPrivacy={privacy} hideLabel />
         </div>
       )}
+      {privacy === 1 ? (
+        <div className={classes.icons}>
+          <VisibilityOffIcon />
+        </div>
+      ) : null}
     </Card>
   )
 }

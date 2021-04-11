@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet'
 import CreateIcon from '@material-ui/icons/Create'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import { Link } from 'react-router-dom'
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 
 import useDatabaseQuery, { options } from '../../hooks/useDatabaseQuery'
 import useDatabaseSave from '../../hooks/useDatabaseSave'
@@ -32,6 +34,7 @@ import {
   UserFieldNames
 } from '../../firestore'
 import placeholderUrl from '../../assets/images/placeholder-photo.webp'
+import TogglePrivacyBtn from '../../components/toggle-privacy-btn'
 
 const useStyles = makeStyles({
   root: {
@@ -249,7 +252,15 @@ export default () => {
     return <ErrorMessage>Failed to load photo</ErrorMessage>
   }
 
-  const { title, description, albums = [], sourceUrl, tags, createdBy } = photo
+  const {
+    title,
+    description,
+    albums = [],
+    sourceUrl,
+    tags,
+    [PhotoFieldNames.privacy]: privacy,
+    createdBy
+  } = photo
 
   const hasPermissionToEdit = canEditPhoto(user, photo)
 
@@ -303,26 +314,33 @@ export default () => {
           </div>
         </div>
         <div className={classes.meta}>
-          <Heading variant="h1">{title || defaultTitle}</Heading>
+          <Heading variant="h1">
+            <Link to={routes.viewPhotoWithVar.replace(':photoId', photoId)}>
+              {title || defaultTitle}
+            </Link>{' '}
+            {privacy === 1 ? <VisibilityOffIcon /> : ''}
+          </Heading>
           <Heading variant="h2">
-            By {createdBy[UserFieldNames.username]}
+            By{' '}
+            <Link to={routes.viewUserWithVar.replace(':userId', createdBy.id)}>
+              {createdBy[UserFieldNames.username]}
+            </Link>
           </Heading>
           {description && <Markdown source={description} />}
           {tags.map(tagName => (
             <TagChip key={tagName} tagName={tagName} />
           ))}
-          <div className={classes.controls}>
-            {user && (
-              <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />
-            )}{' '}
-            {user && (
+          {user && (
+            <div className={classes.controls}>
+              <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />{' '}
               <Button
                 onClick={() => setIsEditorVisible(currentVal => !currentVal)}
                 icon={<CreateIcon />}>
                 Edit
-              </Button>
-            )}
-          </div>
+              </Button>{' '}
+              <TogglePrivacyBtn photoId={photoId} currentPrivacy={privacy} />
+            </div>
+          )}
           {isEditorVisible && <Editor existingFields={photo} />}
         </div>
       </div>

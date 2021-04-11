@@ -29,8 +29,6 @@ export async function quickDeleteRecords(collectionName, whereClauses) {
 
   const { docs } = await query.get()
 
-  console.log(docs)
-
   return Promise.all(docs.map(doc => doc.ref.delete()))
 }
 

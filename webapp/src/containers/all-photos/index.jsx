@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Helmet } from 'react-helmet'
 
-import { OrderDirections } from '../../hooks/useDatabaseQuery'
+import { OrderDirections, Operators } from '../../hooks/useDatabaseQuery'
 import useInfiniteDatabaseQuery from '../../hooks/useInfiniteDatabaseQuery'
 import { CollectionNames, PhotoFieldNames } from '../../firestore'
 
@@ -35,23 +35,23 @@ const Photos = () => {
     isError,
     results,
     isAtEndOfQuery
-  ] = useInfiniteDatabaseQuery(0, CollectionNames.Photos, undefined, [
-    PhotoFieldNames.createdAt,
-    OrderDirections.DESC
-  ])
+  ] = useInfiniteDatabaseQuery(
+    0,
+    CollectionNames.Photos,
+    [
+      [
+        PhotoFieldNames.privacy,
+        Operators.EQUALS,
+        0 // public
+      ]
+    ],
+    [PhotoFieldNames.createdAt, OrderDirections.DESC]
+  )
   const classes = useStyles()
-
-  // if (isLoading || !results) {
-  //   return <LoadingIndicator message="Loading photos..." />
-  // }
 
   if (isError) {
     return <ErrorMessage>Failed to load photos</ErrorMessage>
   }
-
-  // if (!results.length) {
-  //   return <NoResultsMessage>No photos found</NoResultsMessage>
-  // }
 
   return (
     <>

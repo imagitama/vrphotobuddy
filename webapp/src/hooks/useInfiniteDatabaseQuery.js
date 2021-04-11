@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import useDatabaseQuery, {
   getWhereClausesAsString,
-  getOrderByAsString
+  getOrderByAsString,
+  options
 } from './useDatabaseQuery'
 
 const maxResultsPerPage = 20
@@ -45,13 +46,22 @@ export default (
     resultsByPageNumber
   )
 
+  const hydratePage = newResults =>
+    setResultsByPageNumber(currentVal => ({
+      ...currentVal,
+      [pageNumber]: newResults
+    }))
+
   const [isLoading, isErrored, queryResults] = useDatabaseQuery(
     collectionName,
     whereClauses,
-    maxResultsPerPage,
-    orderBy,
-    subscribe,
-    startAfterSnapshot
+    {
+      [options.orderBy]: orderBy,
+      [options.subscribe]: subscribe,
+      [options.limit]: maxResultsPerPage,
+      [options.startAfter]: startAfterSnapshot,
+      [options.onSubscribe]: hydratePage
+    }
   )
 
   const isChangingPageNumberRef = useRef(false)
@@ -72,16 +82,13 @@ export default (
     getOrderByAsString(orderBy)
   ])
 
-  useEffect(() => {
-    if (!queryResults) {
-      return
-    }
+  // useEffect(() => {
+  //   if (!queryResults) {
+  //     return
+  //   }
 
-    setResultsByPageNumber(currentVal => ({
-      ...currentVal,
-      [pageNumber]: queryResults
-    }))
-  }, [getUpdateResultsDependency(queryResults)])
+  //   hydratePage()
+  // }, [getUpdateResultsDependency(queryResults)])
 
   useEffect(() => {
     function onScroll() {

@@ -16,6 +16,9 @@ const useStyles = makeStyles(theme => ({
       height: '1em'
     }
   },
+  noPush: {
+    marginLeft: 0
+  },
   tertiary: {
     color: '#FFF',
     backgroundColor: theme.palette.tertiary.main,
@@ -52,7 +55,15 @@ export default forwardRef(
           props.color === 'tertiary' ? classes.tertiary : ''
         }`}
         {...props}>
-        {children} {icon && <span className={classes.icon}>{icon}</span>}
+        {children}{' '}
+        {icon && (
+          <span
+            className={`${classes.icon} ${
+              children === '' ? classes.noPush : ''
+            }`}>
+            {icon}
+          </span>
+        )}
       </Button>
     )
 
