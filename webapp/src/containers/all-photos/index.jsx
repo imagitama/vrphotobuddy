@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { Helmet } from 'react-helmet'
 
 import { OrderDirections } from '../../hooks/useDatabaseQuery'
 import useInfiniteDatabaseQuery from '../../hooks/useInfiniteDatabaseQuery'
@@ -72,8 +73,17 @@ export default () => {
   const classes = useStyles()
 
   return (
-    <div className={classes.root}>
-      <Photos />
-    </div>
+    <>
+      <Helmet>
+        <title>Browse all photos | VR Photo Buddy</title>
+        <meta
+          name="description"
+          content={`Browse all of the photos that the users of the site have taken.`}
+        />
+      </Helmet>
+      <div className={classes.root}>
+        <Photos />
+      </div>
+    </>
   )
 }

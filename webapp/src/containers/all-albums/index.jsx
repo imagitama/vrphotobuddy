@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { Helmet } from 'react-helmet'
 
 import useDatabaseQuery, { options } from '../../hooks/useDatabaseQuery'
 import { CollectionNames } from '../../firestore'
@@ -46,8 +47,17 @@ export default () => {
   const classes = useStyles()
 
   return (
-    <div className={classes.root}>
-      <Albums />
-    </div>
+    <>
+      <Helmet>
+        <title>Browse all photo albums | VR Photo Buddy</title>
+        <meta
+          name="description"
+          content={`Browse all of the photo albums that the users of the site have created.`}
+        />
+      </Helmet>
+      <div className={classes.root}>
+        <Albums />
+      </div>
+    </>
   )
 }

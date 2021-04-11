@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
+import { Helmet } from 'react-helmet'
 
 import useDatabaseQuery, {
   options,
@@ -63,13 +64,22 @@ export default () => {
   const userId = useFirebaseUserId()
 
   return (
-    <div className={classes.root}>
-      {userId && (
-        <Button icon={<AddIcon />} url={routes.createAlbum}>
-          Create Album
-        </Button>
-      )}
-      <Albums />
-    </div>
+    <>
+      <Helmet>
+        <title>Browse my albums | VR Photo Buddy</title>
+        <meta
+          name="description"
+          content={`Browse all of the albums that you have created.`}
+        />
+      </Helmet>
+      <div className={classes.root}>
+        {userId && (
+          <Button icon={<AddIcon />} url={routes.createAlbum}>
+            Create Album
+          </Button>
+        )}
+        <Albums />
+      </div>
+    </>
   )
 }
