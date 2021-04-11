@@ -256,7 +256,7 @@ export default () => {
     title,
     description,
     albums = [],
-    sourceUrl,
+    [PhotoFieldNames.sourceUrl]: sourceUrl,
     tags,
     [PhotoFieldNames.privacy]: privacy,
     createdBy
@@ -269,9 +269,13 @@ export default () => {
       <Helmet>
         <title>{`${title ||
           defaultTitle} | View photo | VR Photo Buddy`}</title>
-        <meta name="description" content={`View the photo ${title}`} />
+        <meta
+          name="description"
+          content={`View the photo ${title || defaultTitle}`}
+        />
         <meta property="og:title" content={title} />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content={sourceUrl} />
         <meta
           property="og:description"
           content={`View the photo "${title}".`}
