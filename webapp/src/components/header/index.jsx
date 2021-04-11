@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import { useMediaQuery } from 'react-responsive'
 import MenuIcon from '@material-ui/icons/Menu'
-import CameraIcon from '@material-ui/icons/Camera'
 
 import * as routes from '../../routes'
 import { openMenu } from '../../modules/app'
@@ -21,6 +20,7 @@ import MobileMenu from '../mobile-menu'
 import DesktopAccountMenu from '../desktop-account-menu'
 import Searchbar from '../searchbar'
 import DesktopMenu from '../desktop-menu'
+import logoUrl from '../../assets/images/logo.png'
 
 // when the navigation starts obstructing the logo
 const mediaQueryForMenuLogoCollision = '@media (max-width: 1280px)'
@@ -49,7 +49,11 @@ const useStyles = makeStyles({
   },
   logoWrapper: {
     display: 'flex',
-    alignItems: 'start'
+    alignItems: 'start',
+    '& img': {
+      marginLeft: '1rem',
+      width: '60px'
+    }
   },
   socialIcons: {
     marginLeft: '0.25rem',
@@ -126,7 +130,7 @@ export default () => {
           to={routes.home}
           title="Go to the homepage"
           className={classes.logo}>
-          VR Photo Buddy <CameraIcon />
+          VR Photo Buddy <img src={logoUrl} alt="Logo" />
         </Link>
       </div>
 

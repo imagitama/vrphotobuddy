@@ -1,3 +1,9 @@
-const storage = require('node-persist')
+const Store = require('electron-store')
 
-module.exports = storage
+const store = new Store()
+
+const getItem = (key) => Promise.resolve(store.get(key))
+module.exports.getItem = getItem
+
+const setItem = (key, val) => Promise.resolve(store.set(key, val))
+module.exports.setItem = setItem

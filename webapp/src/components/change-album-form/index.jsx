@@ -18,7 +18,7 @@ import Dropdown from '../dropdown'
 import useFirebaseUserId from '../../hooks/useFirebaseUserId'
 import { handleError } from '../../error-handling'
 
-export default ({ photoId, existingAlbumRefs, onOpen, onClose }) => {
+export default ({ photoId, existingAlbumRefs = [], onOpen, onClose }) => {
   const [, , user] = useUserRecord()
   const userId = useFirebaseUserId()
   const [
@@ -52,14 +52,18 @@ export default ({ photoId, existingAlbumRefs, onOpen, onClose }) => {
       //   onSaveClick()
       // }
 
+      const albums = existingAlbumRefs.find(
+        ref => ref.id === albumIdAddedOrRemoved
+      )
+        ? existingAlbumRefs
+            .filter(ref => ref.id !== albumIdAddedOrRemoved)
+            .map(({ id }) => createRef(CollectionNames.Albums, id))
+        : existingAlbumRefs
+            .map(({ id }) => createRef(CollectionNames.Albums, id))
+            .concat([createRef(CollectionNames.Albums, albumIdAddedOrRemoved)])
+
       await save({
-        [PhotoFieldNames.albums]: existingAlbumRefs.find(
-          ref => ref.id === albumIdAddedOrRemoved
-        )
-          ? existingAlbumRefs.filter(ref => ref.id !== albumIdAddedOrRemoved)
-          : existingAlbumRefs.concat([
-              createRef(CollectionNames.Albums, albumIdAddedOrRemoved)
-            ]),
+        [PhotoFieldNames.albums]: albums,
         [PhotoFieldNames.lastModifiedBy]: createRef(
           CollectionNames.Users,
           userId
@@ -82,7 +86,7 @@ export default ({ photoId, existingAlbumRefs, onOpen, onClose }) => {
 
   return (
     <Dropdown
-      label="Change Albums"
+      label={isSaving ? 'Saving...' : `Change Albums`}
       selectedValues={existingAlbumRefs.map(albumRef => albumRef.id)}
       onClickWithValue={albumId => updateAlbumsForPhoto(albumId)}
       options={albumsForUser.map(albumForUser => ({

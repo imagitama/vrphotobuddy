@@ -19,7 +19,9 @@ const authenticationApp = customAuthentication(getCustomAuthenticationUrl())
 exports.token = token()
 exports.authorize = authorizeApp
 exports.authentication = authenticationApp
-exports.garbageCollection = garbageCollection()
+
+// this deletes expired tokens
+// exports.garbageCollection = garbageCollection()
 
 // photos
 exports.uploadPhoto = require('./src/functions/uploadPhoto')

@@ -7,6 +7,7 @@ let isAuthenticated = false
 const storageKeyOAuthToken = 'oauth-token'
 const storageKeyOAuthTokenExpiryMs = 'oauth-token-expiry'
 let validAccessToken
+let webserver
 
 // class NoOAuthTokenError extends Error {
 //   constructor() {
@@ -31,11 +32,15 @@ const getNewOAuthTokenAndExpiry = async () => {
         .send(
           '<style>body { background: black; color: white; padding: 100px; font-size: 200%; font-family: sans-serif; }</style>You have authenticated successfully and you can close this browser tab'
         )
+
+      // free up port for future webservers
+      webserver.close()
+
       resolve({ accessToken, expiresIn })
     })
 
     // TODO: Configure port with env
-    app.listen(getConfig().OAUTH_REDIRECT_WEBSERVER_PORT, () => {
+    webserver = app.listen(getConfig().OAUTH_REDIRECT_WEBSERVER_PORT, () => {
       console.info(
         `waiting for oauth response on port ${
           getConfig().OAUTH_REDIRECT_WEBSERVER_PORT
