@@ -1,42 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import LazyLoad from 'react-lazyload'
 import { useParams, useHistory } from 'react-router'
 import { Helmet } from 'react-helmet'
 import CreateIcon from '@material-ui/icons/Create'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
-import useDatabaseQuery, {
-  options,
-  mapDates,
-  Operators,
-  OrderDirections
-} from '../../hooks/useDatabaseQuery'
+import useDatabaseQuery, { options } from '../../hooks/useDatabaseQuery'
 import useDatabaseSave from '../../hooks/useDatabaseSave'
-import {
-  CollectionNames,
-  PhotoFieldNames,
-  UserFieldNames,
-  AlbumFieldNames
-} from '../../firestore'
 import useUserRecord from '../../hooks/useUserRecord'
+import useFirebaseUserId from '../../hooks/useFirebaseUserId'
 
 import LoadingIndicator from '../../components/loading-indicator'
 import ErrorMessage from '../../components/error-message'
 import Heading from '../../components/heading'
 import Button from '../../components/button'
 import Markdown from '../../components/markdown'
-import Dropdown from '../../components/dropdown'
 import ChangeAlbumForm from '../../components/change-album-form'
 import TextInput from '../../components/text-input'
+import TagInput from '../../components/tag-input'
+import TagChip from '../../components/tag-chip'
+import SuccessMessage from '../../components/success-message'
 
 import * as routes from '../../routes'
 import { canEditPhoto } from '../../permissions'
 import { createRef, getOpenGraphUrlForRouteUrl } from '../../utils'
-import SuccessMessage from '../../components/success-message'
-import useFirebaseUserId from '../../hooks/useFirebaseUserId'
 import { handleError } from '../../error-handling'
-import TagInput from '../../components/tag-input'
-import TagChip from '../../components/tag-chip'
+import {
+  CollectionNames,
+  PhotoFieldNames,
+  UserFieldNames
+} from '../../firestore'
+import placeholderUrl from '../../assets/images/placeholder-photo.webp'
 
 const useStyles = makeStyles({
   root: {
@@ -52,20 +47,36 @@ const useStyles = makeStyles({
   },
   photo: {
     margin: '0 auto',
+    padding: '0 100px',
     maxWidth: '1500px',
     '& img': {
       width: '100%'
     }
   },
+  photoWrapper: {
+    position: 'relative'
+  },
   control: {
+    width: '100px',
     position: 'absolute',
-    top: 0
+    top: '50%',
+    transform: 'translateX(-25%)',
+    cursor: 'pointer',
+    '& svg': {
+      fontSize: '500%'
+    }
   },
   prev: {
     left: 0
   },
   next: {
-    right: 0
+    right: 0,
+    textAlign: 'right'
+  },
+  actualPhoto: {
+    position: 'absolute',
+    top: 0,
+    left: 0
   }
 })
 
@@ -176,14 +187,14 @@ const getNextId = (photoId, specialResult) => {
 
   const idx = specialResult.ids.indexOf(photoId)
 
-  console.log('here', idx)
-
   if (idx === specialResult.ids.length - 1) {
     return null
   }
 
   return specialResult.ids[idx + 1]
 }
+
+const defaultTitle = '(untitled)'
 
 export default () => {
   const { photoId } = useParams()
@@ -201,6 +212,28 @@ export default () => {
   const [isEditorVisible, setIsEditorVisible] = useState(false)
   const { push } = useHistory()
 
+  const prevId = getPrevId(photoId, specialResult)
+  const nextId = getNextId(photoId, specialResult)
+
+  const goNext = () =>
+    nextId !== null && push(routes.viewPhotoWithVar.replace(':photoId', nextId))
+  const goPrev = () =>
+    prevId !== null && push(routes.viewPhotoWithVar.replace(':photoId', prevId))
+
+  useEffect(() => {
+    const handler = e => {
+      if (e.keyCode === 37) {
+        goPrev()
+      } else if (e.keyCode === 39) {
+        goNext()
+      }
+    }
+
+    document.addEventListener('keydown', handler)
+
+    return () => document.removeEventListener('keydown', handler)
+  }, [nextId, prevId])
+
   if (isLoading || !photo) {
     return <LoadingIndicator message="Loading photo..." />
   }
@@ -213,18 +246,10 @@ export default () => {
 
   const hasPermissionToEdit = canEditPhoto(user, photo)
 
-  const prevId = getPrevId(photoId, specialResult)
-  const nextId = getNextId(photoId, specialResult)
-
-  console.log(nextId, prevId, specialResult, photoId)
-
-  const goNext = () => push(routes.viewPhotoWithVar.replace(':photoId', nextId))
-  const goPrev = () => push(routes.viewPhotoWithVar.replace(':photoId', prevId))
-
   return (
     <div className={classes.root}>
       <Helmet>
-        <title>{`${title} | View photo | vrphotobuddy`}</title>
+        <title>{`${title || defaultTitle} | View photo | vrphotobuddy`}</title>
         <meta name="description" content={`View the photo ${title}`} />
         <meta property="og:title" content={title} />
         <meta property="og:type" content="website" />
@@ -242,20 +267,35 @@ export default () => {
       </Helmet>
       <div>
         {prevId !== null && (
-          <div className={`${classes.control} ${classes.prev}`}>
-            <Button onClick={goPrev}>{'<'}</Button>
+          <div
+            className={`${classes.control} ${classes.prev}`}
+            onClick={goPrev}>
+            <ChevronLeftIcon />
           </div>
         )}
         {nextId !== null && (
-          <div className={`${classes.control} ${classes.next}`}>
-            <Button onClick={goNext}>{'>'}</Button>
+          <div
+            className={`${classes.control} ${classes.next}`}
+            onClick={goNext}>
+            <ChevronRightIcon />
           </div>
         )}
         <div className={classes.photo}>
-          <img src={sourceUrl} />
+          <div className={classes.photoWrapper}>
+            <img
+              src={placeholderUrl}
+              className={classes.placeholder}
+              alt="Placeholder photo"
+            />
+            <img
+              src={sourceUrl}
+              className={classes.actualPhoto}
+              alt="Source photo"
+            />
+          </div>
         </div>
         <div className={classes.meta}>
-          <Heading variant="h1">{title || '(untitled)'}</Heading>
+          <Heading variant="h1">{title || defaultTitle}</Heading>
           <Heading variant="h2">
             By {createdBy[UserFieldNames.username]}
           </Heading>

@@ -9,6 +9,7 @@ const {
   PhotoFieldNames,
   PhotoStatuses,
   PhotoPrivacies,
+  OrderDirections,
 } = require('./firebase')
 
 const convertBase64EncodedPhotoToBuffer = (base64EncodedPhoto) =>
@@ -120,7 +121,10 @@ const hydratePhotoList = async () => {
   console.debug('hydrating photo list...')
 
   // TODO: Only get public and non deleted photos
-  const { docs: allPhotos } = await db.collection(CollectionNames.Photos).get()
+  const { docs: allPhotos } = await db
+    .collection(CollectionNames.Photos)
+    .orderBy(PhotoFieldNames.createdAt, OrderDirections.DESC)
+    .get()
 
   const ids = allPhotos.map((photo) => photo.id)
 

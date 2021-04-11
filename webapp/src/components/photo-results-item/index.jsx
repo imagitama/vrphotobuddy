@@ -9,10 +9,12 @@ import Typography from '@material-ui/core/Typography'
 import LazyLoad from 'react-lazyload'
 
 import * as routes from '../../routes'
-import FormattedDate from '../formatted-date'
 import { mediaQueryForTabletsOrBelow } from '../../media-queries'
 import useFirebaseUserId from '../../hooks/useFirebaseUserId'
+import placeholderUrl from '../../assets/images/placeholder-photo.webp'
+
 import ChangeAlbumForm from '../change-album-form'
+import FormattedDate from '../formatted-date'
 
 const useStyles = makeStyles({
   root: {
@@ -44,6 +46,7 @@ const useStyles = makeStyles({
     flexShrink: 0
   },
   imageWrapper: {
+    position: 'relative',
     '& img': {
       width: '100%',
       display: 'block'
@@ -74,12 +77,17 @@ const useStyles = makeStyles({
   },
   show: {
     display: 'block'
+  },
+  actualPhoto: {
+    position: 'absolute',
+    top: 0,
+    left: 0
   }
 })
 
-function truncateTextAndAddEllipsis(text) {
-  return text && text.length >= 100 ? `${text.slice(0, 100)}...` : text
-}
+// function truncateTextAndAddEllipsis(text) {
+//   return text && text.length >= 100 ? `${text.slice(0, 100)}...` : text
+// }
 
 export default ({
   photo: {
@@ -110,7 +118,16 @@ export default ({
           className={classes.link}>
           <LazyLoad width={320} height={240}>
             <div className={classes.imageWrapper}>
-              <img src={smallUrl || sourceUrl} alt="Image for photo" />
+              <img
+                src={placeholderUrl}
+                className={classes.placeholder}
+                alt="Placeholder photo"
+              />
+              <img
+                src={smallUrl || sourceUrl}
+                alt="Image for photo"
+                className={classes.actualPhoto}
+              />
             </div>
           </LazyLoad>
           <div className={classes.meta}>
