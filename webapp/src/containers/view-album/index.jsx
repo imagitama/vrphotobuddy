@@ -102,7 +102,7 @@ function Editor({ existingFields }) {
   const [newFields, setNewFields] = useState({
     [AlbumFieldNames.title]: existingFields[AlbumFieldNames.title],
     [AlbumFieldNames.description]: existingFields[AlbumFieldNames.description],
-    [AlbumFieldNames.tags]: existingFields[AlbumFieldNames.tags]
+    [AlbumFieldNames.tags]: existingFields[AlbumFieldNames.tags] || []
   })
   const classes = useStyles()
 
