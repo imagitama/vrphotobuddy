@@ -69,7 +69,11 @@ const PhotosForAlbum = ({ albumId }) => {
         0 // public
       ]
     ],
-    { [options.populateRefs]: true, [options.subscribe]: true }
+    {
+      [options.populateRefs]: true,
+      [options.subscribe]: true,
+      [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC]
+    }
   )
   const classes = useStyles()
 
