@@ -37,6 +37,7 @@ import {
 import placeholderUrl from '../../assets/images/placeholder-photo.webp'
 import TogglePrivacyBtn from '../../components/toggle-privacy-btn'
 import ToggleIsAdult from '../../components/toggle-is-adult'
+import QuickTagInput from '../../components/quick-tag-input'
 
 const useStyles = makeStyles({
   root: {
@@ -352,8 +353,9 @@ export default () => {
           {tags.map(tagName => (
             <TagChip key={tagName} tagName={tagName} />
           ))}
+
           <div className={classes.controls}>
-            {user && (
+            {hasPermissionToEdit && (
               <>
                 <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />{' '}
                 <Button
