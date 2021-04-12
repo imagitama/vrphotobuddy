@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useParams, useHistory } from 'react-router'
 import { Helmet } from 'react-helmet'
@@ -8,6 +8,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { Link } from 'react-router-dom'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import NightsStayIcon from '@material-ui/icons/NightsStay'
+import TagFacesIcon from '@material-ui/icons/TagFaces'
 
 import useDatabaseQuery, { options } from '../../hooks/useDatabaseQuery'
 import useDatabaseSave from '../../hooks/useDatabaseSave'
@@ -38,6 +39,7 @@ import placeholderUrl from '../../assets/images/placeholder-photo.webp'
 import TogglePrivacyBtn from '../../components/toggle-privacy-btn'
 import ToggleIsAdult from '../../components/toggle-is-adult'
 import QuickTagInput from '../../components/quick-tag-input'
+import TagUserForm from '../../components/tag-user-form'
 
 const useStyles = makeStyles({
   root: {
@@ -49,7 +51,11 @@ const useStyles = makeStyles({
   controls: {
     position: 'absolute',
     top: 0,
-    right: 0
+    right: 0,
+    display: 'flex'
+  },
+  control: {
+    marginLeft: '0.25rem'
   },
   photo: {
     position: 'relative',
@@ -63,7 +69,7 @@ const useStyles = makeStyles({
   photoWrapper: {
     position: 'relative'
   },
-  control: {
+  photoNavigationBtn: {
     width: '100px',
     position: 'absolute',
     top: '50%',
@@ -212,6 +218,7 @@ const defaultTitle = '(untitled)'
 export default () => {
   const { photoId } = useParams()
   const [, , user] = useUserRecord()
+  const userId = useFirebaseUserId()
   const [isLoading, isError, photo] = useDatabaseQuery(
     CollectionNames.Photos,
     photoId,
@@ -224,6 +231,8 @@ export default () => {
   const classes = useStyles()
   const [isEditorVisible, setIsEditorVisible] = useState(false)
   const { push } = useHistory()
+  const photoContainerRef = useRef()
+  const [isTaggingUser, setIsTaggingUser] = useState(false)
 
   const prevId = getPrevId(photoId, specialResult)
   const nextId = getNextId(photoId, specialResult)
@@ -263,6 +272,8 @@ export default () => {
     tags,
     [PhotoFieldNames.privacy]: privacy,
     [PhotoFieldNames.isAdult]: isAdult,
+    [PhotoFieldNames.userTags]: userTags = [],
+    [PhotoFieldNames.userTagPositions]: userTagPositions = [],
     createdBy
   } = photo
 
@@ -296,14 +307,14 @@ export default () => {
         <div className={classes.photo}>
           {prevId !== null && (
             <div
-              className={`${classes.control} ${classes.prev}`}
+              className={`${classes.photoNavigationBtn} ${classes.prev}`}
               onClick={goPrev}>
               <ChevronLeftIcon />
             </div>
           )}
           {nextId !== null && (
             <div
-              className={`${classes.control} ${classes.next}`}
+              className={`${classes.photoNavigationBtn} ${classes.next}`}
               onClick={goNext}>
               <ChevronRightIcon />
             </div>
@@ -318,6 +329,15 @@ export default () => {
               src={sourceUrl}
               className={classes.actualPhoto}
               alt="Source photo"
+            />
+            <TagUserForm
+              photoId={photoId}
+              isTagging={isTaggingUser}
+              currentTags={userTags}
+              currentTagPositions={userTagPositions}
+              canEdit={createdBy.id === userId}
+              onDone={() => setIsTaggingUser(false)}
+              onCancel={() => setIsTaggingUser(false)}
             />
           </div>
         </div>
@@ -357,16 +377,37 @@ export default () => {
           <div className={classes.controls}>
             {hasPermissionToEdit && (
               <>
-                <ChangeAlbumForm photoId={photoId} existingAlbumRefs={albums} />{' '}
-                <Button
-                  onClick={() => setIsEditorVisible(currentVal => !currentVal)}
-                  icon={<CreateIcon />}>
-                  Edit
-                </Button>
-                &nbsp;
-                <TogglePrivacyBtn photoId={photoId} currentPrivacy={privacy} />
-                &nbsp;
-                <ToggleIsAdult photoId={photoId} currentIsAdult={isAdult} />
+                <div className={classes.control}>
+                  <Button
+                    onClick={() => setIsTaggingUser(currentVal => !currentVal)}
+                    icon={<TagFacesIcon />}>
+                    Tag Someone
+                  </Button>
+                </div>
+                <div className={classes.control}>
+                  <ChangeAlbumForm
+                    photoId={photoId}
+                    existingAlbumRefs={albums}
+                  />
+                </div>
+                <div className={classes.control}>
+                  <Button
+                    onClick={() =>
+                      setIsEditorVisible(currentVal => !currentVal)
+                    }
+                    icon={<CreateIcon />}>
+                    Edit
+                  </Button>
+                </div>
+                <div className={classes.control}>
+                  <TogglePrivacyBtn
+                    photoId={photoId}
+                    currentPrivacy={privacy}
+                  />
+                </div>
+                <div className={classes.control}>
+                  <ToggleIsAdult photoId={photoId} currentIsAdult={isAdult} />
+                </div>
               </>
             )}
           </div>

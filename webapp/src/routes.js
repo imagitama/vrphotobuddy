@@ -4,6 +4,7 @@ export const home = '/'
 export const allPhotos = '/photos'
 export const viewPhotoWithVar = '/photos/:photoId'
 export const myPhotos = '/my-photos'
+export const viewUserTagsWithVar = '/user-tags/:vrchatUsernameOrUserId'
 
 // albums
 export const allAlbums = '/albums'

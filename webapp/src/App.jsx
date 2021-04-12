@@ -86,6 +86,9 @@ const ViewUser = lazy(() =>
 const CreateAlbum = lazy(() =>
   catchChunkDeaths(() => import('./containers/create-album'))
 )
+const ViewUserTags = lazy(() =>
+  catchChunkDeaths(() => import('./containers/view-user-tag'))
+)
 
 const SetupProfileRedirect = () => {
   const [, , user] = useUserRecord()
@@ -125,6 +128,11 @@ const MainContent = () => {
         <Route exact path={routes.allPhotos} component={AllPhotos} />
         <Route exact path={routes.myPhotos} component={MyPhotos} />
         <Route exact path={routes.viewPhotoWithVar} component={ViewPhoto} />
+        <Route
+          exact
+          path={routes.viewUserTagsWithVar}
+          component={ViewUserTags}
+        />
 
         {/* albums */}
         <Route exact path={routes.allAlbums} component={AllAlbums} />

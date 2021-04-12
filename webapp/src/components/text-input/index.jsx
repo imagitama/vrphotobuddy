@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import TextField from '@material-ui/core/TextField'
 
-export default props => <TextField variant="outlined" {...props} />
+export default forwardRef((props, ref) => (
+  <TextField variant="outlined" ref={ref} {...props} />
+))

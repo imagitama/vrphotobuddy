@@ -110,10 +110,18 @@ export const PhotoFieldNames = {
   isAdult: 'isAdult',
   tags: 'tags',
   albums: 'albums',
+  userTags: 'userTags',
+  userTagPositions: 'userTagPositions',
   lastModifiedBy: 'lastModifiedBy',
   lastModifiedAt: 'lastModifiedAt',
   createdBy: 'createdBy',
   createdAt: 'createdAt'
+}
+
+export const UserTagFieldNames = {
+  positionX: 'positionX',
+  positionY: 'positionY',
+  vrchatUsername: 'vrchatUsername'
 }
 
 export const AlbumFieldNames = {
