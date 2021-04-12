@@ -39,7 +39,8 @@
     "patreon": "^0.4.1",
     "sharp": "^0.26.0",
     "turndown": "^7.0.0",
-    "twit": "^2.2.11"
+    "twit": "^2.2.11",
+    "twittersignin": "^1.2.0"
   },
   "devDependencies": {
     "eslint": "^7.17.0",

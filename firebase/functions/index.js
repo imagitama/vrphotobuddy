@@ -4,6 +4,7 @@ exports.onUserSignup = require('./src/functions/onUserSignup')
 exports.optimizeImage = require('./src/functions/optimizeImage')
 exports.loginWithDiscord = require('./src/functions/loginWithDiscord')
 exports.downloadAndOptimizeDiscordAvatar = require('./src/functions/downloadAndOptimizeDiscordAvatar')
+exports.connectToTwitter = require('./src/functions/connectToTwitter')
 
 // oauth
 // NOTE: Do these at the end or errors!

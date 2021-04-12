@@ -17,6 +17,7 @@ import placeholderUrl from '../../assets/images/placeholder-photo.webp'
 import ChangeAlbumForm from '../change-album-form'
 import FormattedDate from '../formatted-date'
 import TogglePrivacyBtn from '../toggle-privacy-btn'
+import ToggleIsAdult from '../toggle-is-adult'
 import { PhotoFieldNames } from '../../firestore'
 
 const useStyles = makeStyles({
@@ -53,7 +54,12 @@ const useStyles = makeStyles({
     '& img': {
       width: '100%',
       display: 'block'
-    }
+    },
+    overflow: 'hidden'
+  },
+  adult: {
+    filter: 'blur(5px)',
+    transform: 'scale(1.1)'
   },
   meta: {
     position: 'absolute',
@@ -78,6 +84,12 @@ const useStyles = makeStyles({
     display: 'none',
     padding: '0.5rem'
   },
+  controlItems: {
+    display: 'flex'
+  },
+  control: {
+    marginRight: '0.25rem'
+  },
   show: {
     display: 'block'
   },
@@ -91,6 +103,14 @@ const useStyles = makeStyles({
     top: 0,
     right: 0,
     padding: '0.5rem'
+  },
+  adultMessage: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: '#FFF',
+    textShadow: '1px 1px 1px #000'
   }
 })
 
@@ -106,6 +126,7 @@ export default ({
     title,
     albums = [],
     [PhotoFieldNames.privacy]: privacy,
+    [PhotoFieldNames.isAdult]: isAdult,
     createdAt,
     createdBy
   }
@@ -126,17 +147,24 @@ export default ({
           to={routes.viewPhotoWithVar.replace(':photoId', id)}
           className={classes.link}>
           <LazyLoad width={320} height={240}>
-            <div className={classes.imageWrapper}>
+            <div className={`${classes.imageWrapper}`}>
               <img
                 src={placeholderUrl}
-                className={classes.placeholder}
+                className={`${classes.placeholder} ${
+                  isAdult ? classes.adult : ''
+                }`}
                 alt="Placeholder photo"
               />
               <img
                 src={smallUrl || sourceUrl}
                 alt="Image for photo"
-                className={classes.actualPhoto}
+                className={`${classes.actualPhoto} ${
+                  isAdult ? classes.adult : ''
+                }`}
               />
+              {isAdult && (
+                <div className={classes.adultMessage}>Adult Content</div>
+              )}
             </div>
           </LazyLoad>
           <div className={classes.meta}>
@@ -152,14 +180,27 @@ export default ({
       {isOwner && (
         <div
           className={`${classes.controls} ${showControls ? classes.show : ''}`}>
-          <ChangeAlbumForm
-            photoId={id}
-            existingAlbumRefs={albums}
-            onOpen={() => setShowControls(true)}
-            onClose={() => setShowControls(false)}
-            hideLabel
-          />{' '}
-          <TogglePrivacyBtn photoId={id} currentPrivacy={privacy} hideLabel />
+          <div className={classes.controlItems}>
+            <div className={classes.control}>
+              <ChangeAlbumForm
+                photoId={id}
+                existingAlbumRefs={albums}
+                onOpen={() => setShowControls(true)}
+                onClose={() => setShowControls(false)}
+                hideLabel
+              />
+            </div>
+            <div className={classes.control}>
+              <TogglePrivacyBtn
+                photoId={id}
+                currentPrivacy={privacy}
+                hideLabel
+              />
+            </div>
+            <div className={classes.control}>
+              <ToggleIsAdult photoId={id} currentIsAdult={isAdult} hideLabel />
+            </div>
+          </div>
         </div>
       )}
       {privacy === 1 ? (

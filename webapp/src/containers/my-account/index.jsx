@@ -8,34 +8,26 @@ import { useMediaQuery } from 'react-responsive'
 
 import LoadingIndicator from '../../components/loading-indicator'
 import ErrorMessage from '../../components/error-message'
-// import AvatarUploadForm from '../../components/avatar-upload-form'
-// import UsernameEditor from '../../components/username-editor'
-// import AdultContentToggle from '../../components/adult-content-toggle'
+import AvatarUploadForm from '../../components/avatar-upload-form'
+import UsernameEditor from '../../components/username-editor'
+import AdultContentToggle from '../../components/adult-content-toggle'
 import Heading from '../../components/heading'
 import BodyText from '../../components/body-text'
 import NoPermissionMessage from '../../components/no-permission-message'
-// import MyUploads from '../../components/my-uploads'
-// import SocialMediaUsernamesEditor from '../../components/social-media-usernames-editor'
-// import BioEditor from '../../components/bio-editor'
-// import MyFeaturedAssets from '../../components/my-featured-assets'
-// import PedestalUploadForm from '../../components/pedestal-upload-form'
-// import MyAssetAmendments from '../../components/my-asset-amendments'
-// import FavoriteSpeciesEditor from '../../components/favorite-species-editor'
-// import MyTransactions from '../../components/my-transactions'
-// import NotificationSettings from '../../components/notification-settings'
+import BioEditor from '../../components/bio-editor'
+import NotificationSettings from '../../components/notification-settings'
+import ConnectToTwitterForm from '../../components/connect-to-twitter-form'
 
 import useUserRecord from '../../hooks/useUserRecord'
 import useFirebaseUserId from '../../hooks/useFirebaseUserId'
 
 import { UserFieldNames } from '../../firestore'
 import * as routes from '../../routes'
-// import { trackAction } from '../../analytics'
-// import PatreonConnectForm from '../../components/patreon-connect-form'
+import { trackAction } from '../../analytics'
 import {
   queryForTabletsOrBelow,
   mediaQueryForTabletsOrBelow
 } from '../../media-queries'
-// import VrPlatformChooser from '../../components/vr-platform-chooser'
 
 function WelcomeMessage() {
   const [isLoading, isErrored, user] = useUserRecord()
@@ -129,18 +121,14 @@ export default () => {
           value={activeTabIdx}
           onChange={(event, newIdx) => setActiveTabIdx(newIdx)}
           className={classes.tabs}>
-          {/* <Tab label="Username" index={0} />
+          <Tab label="Username" index={0} />
           <Tab label="Avatar" index={1} />
           <Tab label="Profile" index={2} />
           <Tab label="Settings" index={3} />
-          <Tab label="Social" index={4} />
-          <Tab label="Patreon" index={patreonConnectFormTabIdx} />
-          <Tab label="Uploads" index={6} />
-          <Tab label="Amendments" index={7} />
-          <Tab label="Transactions" index={8} /> */}
+          <Tab label="Twitter" index={4} />
         </Tabs>
         <div className={classes.tabPanels}>
-          {/* <TabPanel value={activeTabIdx} index={0}>
+          <TabPanel value={activeTabIdx} index={0}>
             <Heading variant="h2">Username</Heading>
             <p>You can change your username as many times as you would like.</p>
             <UsernameEditor
@@ -170,12 +158,6 @@ export default () => {
                 trackAction(analyticsCategoryName, 'Click save bio button')
               }
             />
-            <Heading variant="h3">Favorite Species</Heading>
-            <FavoriteSpeciesEditor
-              analyticsCategoryName={analyticsCategoryName}
-            />
-            <Heading variant="h3">VR Games</Heading>
-            <VrPlatformChooser />
           </TabPanel>
           <TabPanel value={activeTabIdx} index={3}>
             <Heading variant="h2">Settings</Heading>
@@ -189,40 +171,15 @@ export default () => {
                 )
               }
             />
-            {userId === '04D3yeAUxTMWo8MxscQImHJwtLV2' && (
-              <PedestalUploadForm userId="04D3yeAUxTMWo8MxscQImHJwtLV2" />
-            )}
             <br />
             <Heading variant="h3">Notifications</Heading>
             <NotificationSettings />
           </TabPanel>
           <TabPanel value={activeTabIdx} index={4}>
-            <Heading variant="h2">Social Media</Heading>
-            <p>These are shown to everyone on your profile.</p>
-            <SocialMediaUsernamesEditor
-              onSaveClick={() =>
-                trackAction(analyticsCategoryName, 'Click save social media')
-              }
-            />
+            <Heading variant="h2">Twitter</Heading>
+            <p>Connect your Twitter account to post tweets.</p>
+            <ConnectToTwitterForm />
           </TabPanel>
-          <TabPanel value={activeTabIdx} index={patreonConnectFormTabIdx}>
-            <Heading variant="h2">Patreon</Heading>
-            <PatreonConnectForm />
-            <Heading variant="h3">My Featured Assets</Heading>
-            <MyFeaturedAssets />
-          </TabPanel>
-          <TabPanel value={activeTabIdx} index={6}>
-            <Heading variant="h2">Your Uploads</Heading>
-            <MyUploads />
-          </TabPanel>
-          <TabPanel value={activeTabIdx} index={7}>
-            <Heading variant="h2">Amendments</Heading>
-            <MyAssetAmendments />
-          </TabPanel>
-          <TabPanel value={activeTabIdx} index={8}>
-            <Heading variant="h2">Transactions</Heading>
-            <MyTransactions />
-          </TabPanel> */}
         </div>
       </div>
     </>

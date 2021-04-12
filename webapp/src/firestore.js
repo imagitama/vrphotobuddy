@@ -94,7 +94,8 @@ export const UserFieldNames = {
   banReason: 'banReason',
   isEditor: 'isEditor',
   isAdmin: 'isAdmin',
-  isBanned: 'isBanned'
+  isBanned: 'isBanned',
+  enabledAdultContent: 'enabledAdultContent'
 }
 
 export const PhotoFieldNames = {
@@ -127,4 +128,29 @@ export const AlbumFieldNames = {
   lastModifiedAt: 'lastModifiedAt',
   createdBy: 'createdBy',
   createdAt: 'createdAt'
+}
+
+export const ProfileFieldNames = {
+  vrchatUserId: 'vrchatUserId',
+  vrchatUsername: 'vrchatUsername',
+  discordUsername: 'discordUsername',
+  twitterUsername: 'twitterUsername',
+  telegramUsername: 'telegramUsername',
+  youtubeChannelId: 'youtubeChannelId',
+  twitchUsername: 'twitchUsername',
+  patreonUsername: 'patreonUsername',
+  lastModifiedBy: 'lastModifiedBy',
+  lastModifiedAt: 'lastModifiedAt',
+  bio: 'bio',
+  notifyOnUnapprovedAssets: 'notifyOnUnapprovedAssets', // deprecated
+  notificationEmail: 'notificationEmail',
+  favoriteSpecies: 'favoriteSpecies',
+  notificationPrefs: 'notificationPrefs',
+  discordUserId: 'discordUserId',
+  neosVrUsername: 'neosVrUsername',
+  chilloutVrUsername: 'chilloutVrUsername'
+}
+
+export const UserMetaFieldNames = {
+  hasConnectedToTwitter: 'hasConnectedToTwitter'
 }

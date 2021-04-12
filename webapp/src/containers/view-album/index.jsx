@@ -6,7 +6,8 @@ import CreateIcon from '@material-ui/icons/Create'
 
 import useDatabaseQuery, {
   options,
-  Operators
+  Operators,
+  OrderDirections
 } from '../../hooks/useDatabaseQuery'
 import useDatabaseSave from '../../hooks/useDatabaseSave'
 import useUserRecord from '../../hooks/useUserRecord'

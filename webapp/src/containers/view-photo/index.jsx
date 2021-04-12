@@ -7,6 +7,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { Link } from 'react-router-dom'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
+import NightsStayIcon from '@material-ui/icons/NightsStay'
 
 import useDatabaseQuery, { options } from '../../hooks/useDatabaseQuery'
 import useDatabaseSave from '../../hooks/useDatabaseSave'
@@ -35,6 +36,7 @@ import {
 } from '../../firestore'
 import placeholderUrl from '../../assets/images/placeholder-photo.webp'
 import TogglePrivacyBtn from '../../components/toggle-privacy-btn'
+import ToggleIsAdult from '../../components/toggle-is-adult'
 
 const useStyles = makeStyles({
   root: {
@@ -259,6 +261,7 @@ export default () => {
     [PhotoFieldNames.sourceUrl]: sourceUrl,
     tags,
     [PhotoFieldNames.privacy]: privacy,
+    [PhotoFieldNames.isAdult]: isAdult,
     createdBy
   } = photo
 
@@ -321,8 +324,23 @@ export default () => {
           <Heading variant="h1">
             <Link to={routes.viewPhotoWithVar.replace(':photoId', photoId)}>
               {title || defaultTitle}
-            </Link>{' '}
-            {privacy === 1 ? <VisibilityOffIcon /> : ''}
+            </Link>
+            &nbsp;
+            {privacy === 1 ? (
+              <span title="Private">
+                <VisibilityOffIcon />
+              </span>
+            ) : (
+              ''
+            )}
+            &nbsp;
+            {isAdult === true ? (
+              <span title="NSFW (Adult)">
+                <NightsStayIcon />
+              </span>
+            ) : (
+              ''
+            )}
           </Heading>
           <Heading variant="h2">
             By{' '}
@@ -342,8 +360,11 @@ export default () => {
                   onClick={() => setIsEditorVisible(currentVal => !currentVal)}
                   icon={<CreateIcon />}>
                   Edit
-                </Button>{' '}
+                </Button>
+                &nbsp;
                 <TogglePrivacyBtn photoId={photoId} currentPrivacy={privacy} />
+                &nbsp;
+                <ToggleIsAdult photoId={photoId} currentIsAdult={isAdult} />
               </>
             )}
           </div>
