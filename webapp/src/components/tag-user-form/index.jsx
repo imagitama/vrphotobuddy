@@ -104,6 +104,10 @@ const useStyles = makeStyles({
   }
 })
 
+function sortByAlpha(a, b) {
+  return a.localeCompare(b)
+}
+
 function TagBox({
   vrchatUsername,
   positionX,
@@ -131,11 +135,9 @@ function TagBox({
   }, [onDone !== undefined, positionX, positionY])
 
   useEffect(() => {
-    if (!onDone) {
-      return
+    if (onDone) {
+      inputRef.current.focus()
     }
-
-    inputRef.current.focus()
 
     const onInputClick = e => e.stopPropagation()
     const onDeleteBtnClick = e => {
@@ -152,16 +154,20 @@ function TagBox({
       }
     }
 
-    inputRef.current.addEventListener('keydown', onKeyDown)
-    inputRef.current.addEventListener('click', onInputClick)
+    if (onDone) {
+      inputRef.current.addEventListener('keydown', onKeyDown)
+      inputRef.current.addEventListener('click', onInputClick)
+    }
 
     if (onDelete) {
       deleteBtnRef.current.addEventListener('click', onDeleteBtnClick)
     }
 
     return () => {
-      inputRef.current.removeEventListener('keydown', onKeyDown)
-      inputRef.current.removeEventListener('click', onInputClick)
+      if (onDone) {
+        inputRef.current.removeEventListener('keydown', onKeyDown)
+        inputRef.current.removeEventListener('click', onInputClick)
+      }
 
       if (onDelete) {
         deleteBtnRef.current.removeEventListener('click', onDeleteBtnClick)
@@ -172,11 +178,13 @@ function TagBox({
   let userUsernames = []
 
   if (allUsers && allUsers.length) {
-    userUsernames = allUsers.reduce(
-      (allUsernames, { [UserFieldNames.username]: username }) =>
-        allUsernames.concat([username]),
-      []
-    )
+    userUsernames = allUsers
+      .reduce(
+        (allUsernames, { [UserFieldNames.username]: username }) =>
+          allUsernames.concat([username]),
+        []
+      )
+      .sort(sortByAlpha)
   }
 
   let existingTaggedUsernames = []
@@ -190,14 +198,12 @@ function TagBox({
       )
       .filter(username => !userUsernames.includes(username))
 
-    existingTaggedUsernames = existingTaggedUsernames.filter(
-      (username, idx) => existingTaggedUsernames.indexOf(username) === idx
-    )
+    existingTaggedUsernames = existingTaggedUsernames
+      .filter(
+        (username, idx) => existingTaggedUsernames.indexOf(username) === idx
+      )
+      .sort(sortByAlpha)
   }
-
-  // existingTaggedUsernames = existingTaggedUsernames.filter(
-  //   (item, idx) => existingTaggedUsernames.indexOf(item) === idx
-  // )
 
   return (
     <div
@@ -360,7 +366,10 @@ export default ({
               canEdit
                 ? () => {
                     onSaveBtnClick(
-                      currentTags.filter((item, itemIdx) => itemIdx !== idx)
+                      currentTags.filter((item, itemIdx) => itemIdx !== idx),
+                      currentTagPositions.filter(
+                        (pos, itemIdx) => itemIdx !== idx
+                      )
                     )
                   }
                 : null

@@ -335,7 +335,7 @@ export default () => {
               isTagging={isTaggingUser}
               currentTags={userTags}
               currentTagPositions={userTagPositions}
-              canEdit={createdBy.id === userId}
+              canEdit={hasPermissionToEdit}
               onDone={() => setIsTaggingUser(false)}
               onCancel={() => setIsTaggingUser(false)}
             />
