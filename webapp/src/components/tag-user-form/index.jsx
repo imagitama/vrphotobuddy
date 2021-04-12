@@ -189,6 +189,10 @@ function TagBox({
         []
       )
       .filter(username => !userUsernames.includes(username))
+
+    existingTaggedUsernames = existingTaggedUsernames.filter(
+      (username, idx) => existingTaggedUsernames.indexOf(username) === idx
+    )
   }
 
   // existingTaggedUsernames = existingTaggedUsernames.filter(
