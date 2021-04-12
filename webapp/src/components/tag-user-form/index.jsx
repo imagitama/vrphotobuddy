@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 import TagFacesIcon from '@material-ui/icons/TagFaces'
 import DeleteIcon from '@material-ui/icons/Delete'
 import DoneIcon from '@material-ui/icons/Done'
@@ -9,7 +11,8 @@ import Button from '../button'
 import {
   UserTagFieldNames,
   CollectionNames,
-  PhotoFieldNames
+  PhotoFieldNames,
+  UserFieldNames
 } from '../../firestore'
 import useDatabaseSave from '../../hooks/useDatabaseSave'
 import { createRef } from '../../utils'
@@ -17,6 +20,7 @@ import { handleError } from '../../error-handling'
 import useFirebaseUserId from '../../hooks/useFirebaseUserId'
 import { Link } from 'react-router-dom'
 import * as routes from '../../routes'
+import useDatabaseQuery from '../../hooks/useDatabaseQuery'
 
 const useStyles = makeStyles({
   root: {
@@ -94,6 +98,9 @@ const useStyles = makeStyles({
   },
   hint: {
     fontSize: '50%'
+  },
+  menuHeading: {
+    padding: '0.5rem'
   }
 })
 
@@ -109,6 +116,11 @@ function TagBox({
   const [username, setUsername] = useState('')
   const inputRef = useRef()
   const deleteBtnRef = useRef()
+  const formRef = useRef()
+  // TODO: Maintain a separate list for these things
+  const [, , allUsers] = useDatabaseQuery(CollectionNames.Users)
+  const [, , allPhotos] = useDatabaseQuery(CollectionNames.Photos)
+  const [isMenuOpen, setIsMenuOpen] = useState(true)
 
   useEffect(() => {
     if (!onDone) {
@@ -157,27 +169,84 @@ function TagBox({
     }
   }, [onDone !== undefined, onDelete !== undefined, username])
 
+  let userUsernames = []
+
+  if (allUsers && allUsers.length) {
+    userUsernames = allUsers.reduce(
+      (allUsernames, { [UserFieldNames.username]: username }) =>
+        allUsernames.concat([username]),
+      []
+    )
+  }
+
+  let existingTaggedUsernames = []
+
+  if (allPhotos && allPhotos.length) {
+    existingTaggedUsernames = allPhotos
+      .reduce(
+        (finalUsernames, { [PhotoFieldNames.userTags]: userTags }) =>
+          finalUsernames.concat(userTags),
+        []
+      )
+      .filter(username => !userUsernames.includes(username))
+  }
+
+  // existingTaggedUsernames = existingTaggedUsernames.filter(
+  //   (item, idx) => existingTaggedUsernames.indexOf(item) === idx
+  // )
+
   return (
     <div
       className={`${classes.tagBox} ${onDone ? classes.newTagBox : ''}`}
       style={{ top: `${positionY}%`, left: `${positionX}%` }}>
-      <Link
-        to={routes.viewUserTagsWithVar.replace(
-          ':vrchatUsernameOrUserId',
-          vrchatUsername
-        )}
-        className={classes.link}>
-        {vrchatUsername && (
-          <span className={classes.username}>{vrchatUsername}</span>
-        )}
-      </Link>
+      {vrchatUsername && (
+        <Link
+          to={routes.viewUserTagsWithVar.replace(
+            ':vrchatUsernameOrUserId',
+            vrchatUsername
+          )}
+          className={classes.link}>
+          {vrchatUsername && (
+            <span className={classes.username}>{vrchatUsername}</span>
+          )}
+        </Link>
+      )}
       {onDelete && (
         <div className={classes.deleteBtn} ref={deleteBtnRef}>
           <DeleteIcon />
         </div>
       )}
       {onDone && (
-        <div className={classes.form}>
+        <div className={classes.form} ref={formRef}>
+          <Menu
+            anchorEl={formRef.current}
+            getContentAnchorEl={null}
+            open={isMenuOpen}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
+            }}
+            onClose={() => setIsMenuOpen(false)}>
+            <span className={classes.menuHeading}>Signed up users</span>
+            {userUsernames.map(username => (
+              <MenuItem key={username} onClick={() => onDone(username)}>
+                {username}
+              </MenuItem>
+            ))}
+            <span className={classes.menuHeading}>Previously tagged users</span>
+            {existingTaggedUsernames.map(username => (
+              <MenuItem key={username} onClick={() => onDone(username)}>
+                {username}
+              </MenuItem>
+            ))}
+            <span className={classes.menuHeading}>Other</span>
+
+            <MenuItem onClick={() => setIsMenuOpen(false)}>Create New</MenuItem>
+          </Menu>
           <span className={classes.hint}>
             Type a VRChat username then press Enter:
           </span>{' '}
@@ -217,8 +286,6 @@ export default ({
       if (!userId) {
         throw new Error('Cannot save without being logged in')
       }
-
-      console.debug(`save user tags`, newTags, newTagPositions)
 
       await save({
         [PhotoFieldNames.userTags]: newTags,
