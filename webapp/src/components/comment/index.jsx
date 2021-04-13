@@ -11,7 +11,7 @@ import {
   CollectionNames,
   CommentFieldNames,
   UserFieldNames
-} from '../../hooks/useDatabaseQuery'
+} from '../../firestore'
 
 import FormattedDate from '../formatted-date'
 import Button from '../button'

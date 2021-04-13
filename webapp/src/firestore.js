@@ -57,7 +57,7 @@ export const CollectionNames = {
   Comments: 'comments',
   Notices: 'notices',
   History: 'history',
-  Endorsements: 'endorsements',
+  Likes: 'likes',
   Profiles: 'profiles',
   Mail: 'mail',
   Summaries: 'summaries',
@@ -65,7 +65,6 @@ export const CollectionNames = {
   Polls: 'polls',
   PollResponses: 'pollResponses',
   GuestUsers: 'guestUsers',
-  Likes: 'likes',
   Special: 'special',
   Tweets: 'tweets',
   UserMeta: 'userMeta',
@@ -73,6 +72,15 @@ export const CollectionNames = {
   ViewCache: 'viewCache',
   Photos: 'photos',
   Albums: 'albums'
+}
+
+export const CommentFieldNames = {
+  parent: 'parent',
+  createdAt: 'createdAt',
+  createdBy: 'createdBy',
+  isDeleted: 'isDeleted',
+  lastModifiedAt: 'lastModifiedAt',
+  lastModifiedBy: 'lastModifiedBy'
 }
 
 export const NotificationsFieldNames = {
@@ -114,6 +122,12 @@ export const PhotoFieldNames = {
   userTagPositions: 'userTagPositions',
   lastModifiedBy: 'lastModifiedBy',
   lastModifiedAt: 'lastModifiedAt',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt'
+}
+
+export const LikeFieldNames = {
+  photo: 'photo',
   createdBy: 'createdBy',
   createdAt: 'createdAt'
 }

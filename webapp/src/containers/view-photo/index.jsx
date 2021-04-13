@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import NightsStayIcon from '@material-ui/icons/NightsStay'
 import TagFacesIcon from '@material-ui/icons/TagFaces'
+import LazyLoad from 'react-lazyload'
 
 import useDatabaseQuery, { options } from '../../hooks/useDatabaseQuery'
 import useDatabaseSave from '../../hooks/useDatabaseSave'
@@ -40,6 +41,9 @@ import TogglePrivacyBtn from '../../components/toggle-privacy-btn'
 import ToggleIsAdult from '../../components/toggle-is-adult'
 import QuickTagInput from '../../components/quick-tag-input'
 import TagUserForm from '../../components/tag-user-form'
+import LikeButton from '../../components/like-button'
+import CommentList from '../../components/comment-list'
+import AddCommentForm from '../../components/add-comment-form'
 
 const useStyles = makeStyles({
   root: {
@@ -373,8 +377,23 @@ export default () => {
           {tags.map(tagName => (
             <TagChip key={tagName} tagName={tagName} />
           ))}
+          <LazyLoad>
+            <CommentList
+              collectionName={CollectionNames.Photos}
+              parentId={photoId}
+            />
+          </LazyLoad>
+          <LazyLoad>
+            <AddCommentForm
+              collectionName={CollectionNames.Photos}
+              parentId={photoId}
+            />
+          </LazyLoad>
 
           <div className={classes.controls}>
+            <div className={classes.control}>
+              <LikeButton photoId={photoId} />
+            </div>
             {hasPermissionToEdit && (
               <>
                 <div className={classes.control}>

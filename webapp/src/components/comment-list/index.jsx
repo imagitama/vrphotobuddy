@@ -6,13 +6,12 @@ import ErrorMessage from '../error-message'
 import NoResultsMessage from '../no-results-message'
 
 import useDatabaseQuery, {
-  CollectionNames,
-  CommentFieldNames,
   Operators,
   OrderDirections,
   options
 } from '../../hooks/useDatabaseQuery'
 
+import { CollectionNames, CommentFieldNames } from '../../firestore'
 import { createRef } from '../../utils'
 
 export default ({ collectionName, parentId }) => {
