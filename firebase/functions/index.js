@@ -12,7 +12,7 @@ const { getCustomAuthenticationUrl } = require('./src/oauth')
 const {
   authorize,
   customAuthentication,
-  garbageCollection,
+  // garbageCollection,
   token,
 } = require('oauth2-firebase-auth')
 const authorizeApp = authorize()

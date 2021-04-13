@@ -4,7 +4,13 @@ const { insertPhoto } = require('../photos')
 
 module.exports = functions.https.onCall(async (data) => {
   try {
-    const { base64EncodedPhoto, oauthToken, platform, filename } = data
+    const {
+      base64EncodedPhoto,
+      oauthToken,
+      platform,
+      filename,
+      originalFileCreatedMs,
+    } = data
 
     if (!oauthToken) {
       throw new Error('No OAuth token provided')
@@ -18,14 +24,15 @@ module.exports = functions.https.onCall(async (data) => {
       throw new Error('OAuth token is invalid or has expired')
     }
 
-    await insertPhoto(
+    const photoId = await insertPhoto(
       base64EncodedPhoto,
       await getUserRefFromOAuthToken(oauthToken),
       platform,
-      filename
+      filename,
+      new Date(originalFileCreatedMs)
     )
 
-    return { success: false }
+    return { success: true, photoId }
   } catch (err) {
     console.error(err)
     throw new functions.https.HttpsError('unknown', err.message)

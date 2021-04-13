@@ -2,6 +2,7 @@ const open = require('open')
 const storage = require('./storage')
 const { getConfig } = require('./config')
 const express = require('express')
+const { setStatus } = require('./status')
 
 let isAuthenticated = false
 const storageKeyOAuthToken = 'oauth-token'
@@ -86,6 +87,8 @@ const convertMinutesToMilliseconds = (mins) => mins * 60 * 1000
 const authenticate = async (forceNeedsNewToken = false) => {
   console.info(`authenticating...`)
 
+  setStatus(`Authenticating...`)
+
   if (forceNeedsNewToken) {
     console.info('forcing a new token')
   }
@@ -113,6 +116,8 @@ const authenticate = async (forceNeedsNewToken = false) => {
     validAccessToken = accessToken
     await storage.setItem(storageKeyOAuthToken, accessToken)
 
+    console.info('access token has been stored')
+
     const expiryAsUnixTimestampMs =
       Date.now() + convertMinutesToMilliseconds(expiresIn / 60)
     await storage.setItem(storageKeyOAuthTokenExpiryMs, expiryAsUnixTimestampMs)
@@ -120,6 +125,8 @@ const authenticate = async (forceNeedsNewToken = false) => {
     console.info(`using new token: ${validAccessToken}`)
     console.info(`expires in: ${expiryAsUnixTimestampMs}`)
   }
+
+  setStatus(`Authenticated successfully`)
 
   isAuthenticated = true
   return true

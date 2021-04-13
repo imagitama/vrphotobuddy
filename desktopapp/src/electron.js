@@ -1,8 +1,15 @@
 const { app, Menu, Tray } = require('electron')
 const path = require('path')
 const log = require('electron-log')
+const child_process = require('child_process')
+const { addListener } = require('./status')
 
 Object.assign(console, log.functions)
+
+const openFile = (path) => {
+  console.info(`opening file ${path}`)
+  child_process.exec(`start ${path}`)
+}
 
 // prevent multiple instances
 const gotTheLock = app.requestSingleInstanceLock()
@@ -13,20 +20,41 @@ if (!gotTheLock) {
 
 let tray = null
 app.whenReady().then(() => {
-  tray = new Tray(path.resolve(app.getAppPath(), 'resources/icon.png'))
+  tray = new Tray(
+    path.resolve(
+      app.getAppPath(),
+      process.env.NODE_ENV === 'development' ? '..' : '.',
+      'resources/icon.png'
+    )
+  )
 
-  let contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Quit',
-      click: () => {
-        app.isQuiting = true
-        app.quit()
+  const createContextMenu = (statusText) => {
+    return Menu.buildFromTemplate([
+      {
+        label: statusText || 'Waiting',
       },
-    },
-  ])
+      {
+        label: 'Logs...',
+        click: () => {
+          openFile(log.transports.file.file)
+        },
+      },
+      {
+        label: 'Quit',
+        click: () => {
+          app.isQuiting = true
+          app.quit()
+        },
+      },
+    ])
+  }
 
-  tray.setToolTip('VR Photo Buddy')
-  tray.setContextMenu(contextMenu)
+  tray.setToolTip(`VR Photo Buddy ${require('../package.json').version}`)
+  tray.setContextMenu(createContextMenu())
+
+  addListener((newStatusText) => {
+    tray.setContextMenu(createContextMenu(newStatusText))
+  })
 
   tray.on('right-click', () => {
     tray.popUpContextMenu()

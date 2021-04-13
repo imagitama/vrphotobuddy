@@ -74,10 +74,11 @@ const insertPhoto = async (
   base64EncodedPhoto,
   createdByRef,
   platform,
-  filename
+  filename,
+  dateOriginalFileCreated
 ) => {
   console.info(
-    `inserting photo by ${createdByRef.id} platform ${platform} filename "${filename}"`
+    `inserting photo by ${createdByRef.id} platform ${platform} filename "${filename}" created at "${dateOriginalFileCreated}"`
   )
 
   const originalPhotoBuffer = convertBase64EncodedPhotoToBuffer(
@@ -97,8 +98,7 @@ const insertPhoto = async (
     fields[fieldName] = url
   }
 
-  // TODO: Decode base64 and write to bucket for better performance OR try and POST the file
-  await db.collection(CollectionNames.Photos).add({
+  const createdDoc = await db.collection(CollectionNames.Photos).add({
     [PhotoFieldNames.sourceUrl]: fields[PhotoFieldNames.sourceUrl],
     [PhotoFieldNames.largeUrl]: fields[PhotoFieldNames.largeUrl],
     [PhotoFieldNames.mediumUrl]: fields[PhotoFieldNames.mediumUrl],
@@ -110,10 +110,13 @@ const insertPhoto = async (
     [PhotoFieldNames.albums]: [],
     [PhotoFieldNames.isAdult]: false,
     [PhotoFieldNames.tags]: [],
+    [PhotoFieldNames.originallyCreatedAt]: dateOriginalFileCreated,
     [PhotoFieldNames.platform]: platform,
     [PhotoFieldNames.createdAt]: new Date(),
     [PhotoFieldNames.createdBy]: createdByRef,
   })
+
+  return createdDoc.id
 }
 module.exports.insertPhoto = insertPhoto
 

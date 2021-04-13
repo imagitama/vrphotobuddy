@@ -15,8 +15,6 @@ const firebaseConfig = {
 
 const firebaseApp = firebase.initializeApp(firebaseConfig)
 
-console.log('is using emulator?', process.env)
-
 if (
   process.env.VRPHOTOBUDDY_USE_EMULATORS ||
   process.env.VRPHOTOBUDDY_USE_FUNCTIONS_EMULATOR

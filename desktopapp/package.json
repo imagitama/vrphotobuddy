@@ -1,12 +1,12 @@
 {
-  "name": "desktopapp",
-  "version": "1.0.0",
+  "name": "vrphotobuddy",
+  "version": "0.0.4",
   "description": "VR Photo Buddy companion desktop app.",
   "main": "src/main.js",
   "scripts": {
-    "start:node": "IS_NODE=true NODE_ENV=development nodemon --watch src src/main.js",
-    "start:emulators": "VRPHOTOBUDDY_USE_EMULATORS=true IS_NODE=true NODE_ENV=development nodemon --watch src src/main.js",
-    "start:electron": "electron src/main.js",
+    "start:node": "cross-env IS_NODE=true NODE_ENV=development nodemon --watch src src/main.js",
+    "start:emulators": "cross-env VRPHOTOBUDDY_USE_EMULATORS=true IS_NODE=true NODE_ENV=development nodemon --watch src src/main.js",
+    "start:electron": "cross-env VRPHOTOBUDDY_USE_EMULATORS=true NODE_ENV=development electron src/main.js",
     "build": "electron-builder -w --x64"
   },
   "author": "",
@@ -23,6 +23,7 @@
     "sharp": "^0.25.4"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "electron": "^8.5.5",
     "electron-builder": "^21.2.0",
     "nodemon": "^2.0.7"

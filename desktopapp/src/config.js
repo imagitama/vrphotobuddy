@@ -50,6 +50,8 @@ const loadConfig = async () => {
       PATH_TO_VRCHAT_PHOTOS = configFile.PATH_TO_VRCHAT_PHOTOS
     }
   } else {
+    console.info('no custom config found, skipping...')
+
     PATH_TO_VRCHAT_PHOTOS = process.env.VRPHOTOBUDDY_DEFAULT_PHOTO_PATH
   }
 

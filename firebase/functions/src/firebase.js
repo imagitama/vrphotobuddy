@@ -68,6 +68,7 @@ const PhotoFieldNames = {
   isAdult: 'isAdult',
   tags: 'tags',
   platform: 'platform', // 0 = VRChat, 1 = CVR, 2 = NeosVR
+  originallyCreatedAt: 'originallyCreatedAt',
   lastModifiedBy: 'lastModifiedBy',
   lastModifiedAt: 'lastModifiedAt',
   createdBy: 'createdBy',

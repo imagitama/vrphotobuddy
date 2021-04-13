@@ -1,18 +1,18 @@
 const functions = require('firebase-functions')
-const admin = require('firebase-admin')
+// const admin = require('firebase-admin')
 const fetch = require('node-fetch')
-const { URLSearchParams } = require('url')
+// const { URLSearchParams } = require('url')
 const config = require('../config')
 
 const TWITTER_OAUTH_CALLBACK_URL =
   config.twitter.callback_url || 'http://localhost:3000/login'
 
-  const twitterSignIn = require('twittersignin')({
-    consumerKey: process.env.TWITTER_CONSUMER_KEY,
-    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    accessToken: process.env.TWITTER_ACCESS_TOKEN,
-    accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-});
+//   const twitterSignIn = require('twittersignin')({
+//     consumerKey: process.env.TWITTER_CONSUMER_KEY,
+//     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+//     accessToken: process.env.TWITTER_ACCESS_TOKEN,
+//     accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+// });
 
 const getRequestToken = async () => {
   console.debug('get request token', TWITTER_OAUTH_CALLBACK_URL)
