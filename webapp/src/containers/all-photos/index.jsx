@@ -25,7 +25,8 @@ const useStyles = makeStyles({
     textTransform: 'uppercase',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: '150%'
+    fontSize: '150%',
+    cursor: 'pointer'
   }
 })
 
@@ -34,7 +35,8 @@ const Photos = () => {
     isLoading,
     isError,
     results,
-    isAtEndOfQuery
+    isAtEndOfQuery,
+    goToNextPage
   ] = useInfiniteDatabaseQuery(
     0,
     CollectionNames.Photos,
@@ -59,10 +61,10 @@ const Photos = () => {
       {isLoading ? (
         <LoadingIndicator message="Loading photos..." />
       ) : (
-        <div className={classes.scrollMessage}>
+        <div className={classes.scrollMessage} onClick={goToNextPage}>
           {isAtEndOfQuery
             ? 'No more photos found'
-            : 'Scroll to load more photos'}
+            : 'Scroll or click here to load more photos'}
         </div>
       )}
     </>

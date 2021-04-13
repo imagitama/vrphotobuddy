@@ -90,6 +90,13 @@ export default (
   //   hydratePage()
   // }, [getUpdateResultsDependency(queryResults)])
 
+  const goToNextPage = () => {
+    console.debug('Next page')
+
+    isChangingPageNumberRef.current = true
+    setPageNumber(currentNum => currentNum + 1)
+  }
+
   useEffect(() => {
     function onScroll() {
       if (!isAllowedToChangePageNumber) {
@@ -107,10 +114,7 @@ export default (
           return
         }
 
-        console.debug('Next page')
-
-        isChangingPageNumberRef.current = true
-        setPageNumber(currentNum => currentNum + 1)
+        goToNextPage()
       } else {
         isChangingPageNumberRef.current = false
       }
@@ -127,5 +131,5 @@ export default (
     []
   )
 
-  return [isLoading, isErrored, allResults, isAtEndOfQuery]
+  return [isLoading, isErrored, allResults, isAtEndOfQuery, goToNextPage]
 }
