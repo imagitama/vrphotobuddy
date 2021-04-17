@@ -7,3 +7,8 @@ module.exports.getItem = getItem
 
 const setItem = (key, val) => Promise.resolve(store.set(key, val))
 module.exports.setItem = setItem
+
+const keys = {
+  lastKnownTime: 'last-known-time',
+}
+module.exports.keys = keys

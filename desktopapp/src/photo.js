@@ -6,7 +6,7 @@ const sharp = require('sharp')
 const { callFunction, functionNames } = require('./firebase')
 const { getOAuthToken, authenticate } = require('./auth')
 const { getConfig } = require('./config')
-const { getItem, setItem } = require('./storage')
+const { getItem, setItem, keys } = require('./storage')
 const { setStatus } = require('./status')
 
 const storageKeyKnownPhotoFilenames = 'known-photo-filenames'
@@ -77,48 +77,23 @@ const processPhoto = async (photoPath) => {
   console.info(`photo converted to webp`)
 
   await uploadPhotoBuffer(webpBuffer, fileName, birthtime)
-
-  await saveKnownPhotoPath(photoPath)
 }
 module.exports.processPhoto = processPhoto
-
-const saveKnownPhotoPath = async (photoPath) => {
-  let knownPhotoFilenamesJson = await getItem(storageKeyKnownPhotoFilenames)
-
-  if (!knownPhotoFilenamesJson) {
-    knownPhotoFilenamesJson = '[]'
-  }
-
-  const knownPhotoFilenames = JSON.parse(knownPhotoFilenamesJson)
-
-  const newKnownPhotoFilenames = knownPhotoFilenames.concat([photoPath])
-
-  await setItem(
-    storageKeyKnownPhotoFilenames,
-    JSON.stringify(newKnownPhotoFilenames)
-  )
-}
 
 const processUnprocessedPhotos = async () => {
   console.info('processing unprocessed photos...')
 
-  const knownPhotoFilenamesJson = await getItem(storageKeyKnownPhotoFilenames)
+  // const storedLastKnownTime = await getItem(keys.lastKnownTime)
+  const storedLastKnownTime = Date.now()
 
-  if (!knownPhotoFilenamesJson) {
-    console.info('no known photo filenames (no json), skipping...')
+  if (!storedLastKnownTime) {
+    console.info('last known time not set, skipping...')
     return
   }
 
-  const knownPhotoFilenames = JSON.parse(knownPhotoFilenamesJson)
+  const lastKnownTime = new Date(storedLastKnownTime)
 
-  if (!knownPhotoFilenames.length) {
-    console.info('no known photo filenames (empty), skipping...')
-    return
-  }
-
-  console.info(
-    `found ${knownPhotoFilenames.length} known photo filenames (first one is "${knownPhotoFilenames[0]}")`
-  )
+  console.info(`last known time: ${lastKnownTime}`)
 
   const pathOfPhotos = await getConfig().PATH_TO_VRCHAT_PHOTOS
 
@@ -126,10 +101,14 @@ const processUnprocessedPhotos = async () => {
 
   const photoPathsToProcess = []
 
+  console.info(`found ${photoFilenamesOnDisk.length} photos`)
+
   for (const photoFilenameOnDisk of photoFilenamesOnDisk) {
     const fullPath = path.resolve(pathOfPhotos, photoFilenameOnDisk)
 
-    if (!knownPhotoFilenames.includes(fullPath)) {
+    const { birthtime } = await fs.stat(fullPath)
+
+    if (birthtime > lastKnownTime) {
       photoPathsToProcess.push(fullPath)
     }
   }

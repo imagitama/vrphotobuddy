@@ -1,8 +1,9 @@
-const { app, Menu, Tray } = require('electron')
+const { app, Menu, Tray, powerMonitor } = require('electron')
 const path = require('path')
 const log = require('electron-log')
 const child_process = require('child_process')
 const { addListener } = require('./status')
+const { setItem, keys } = require('./storage')
 
 Object.assign(console, log.functions)
 
@@ -60,3 +61,13 @@ app.whenReady().then(() => {
     tray.popUpContextMenu()
   })
 })
+
+const onQuit = async () => {
+  console.info('quit detected - storing last known time')
+  await setItem(keys.lastKnownTime, Date.now())
+}
+
+app.on('before-quit', onQuit)
+app.on('will-quit', onQuit)
+
+process.on('exit', onQuit)
