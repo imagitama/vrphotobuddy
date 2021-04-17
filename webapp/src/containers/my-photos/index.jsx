@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Helmet } from 'react-helmet'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControl from '@material-ui/core/FormControl'
 
 import useDatabaseQuery, {
   options,
@@ -8,7 +11,11 @@ import useDatabaseQuery, {
   OrderDirections
 } from '../../hooks/useDatabaseQuery'
 import useFirebaseUserId from '../../hooks/useFirebaseUserId'
-import { CollectionNames, PhotoFieldNames } from '../../firestore'
+import {
+  CollectionNames,
+  PhotoFieldNames,
+  PhotoStatuses
+} from '../../firestore'
 
 import LoadingIndicator from '../../components/loading-indicator'
 import ErrorMessage from '../../components/error-message'
@@ -27,7 +34,7 @@ const useStyles = makeStyles({
   }
 })
 
-const Photos = () => {
+const Photos = ({ showDeletedPhotos }) => {
   const userId = useFirebaseUserId()
   const [isLoading, isError, results] = useDatabaseQuery(
     CollectionNames.Photos,
@@ -37,7 +44,11 @@ const Photos = () => {
         Operators.EQUALS,
         createRef(CollectionNames.Users, userId)
       ]
-    ],
+    ].concat(
+      showDeletedPhotos
+        ? []
+        : [[PhotoFieldNames.status, Operators.EQUALS, PhotoStatuses.Active]]
+    ),
     {
       [options.populateRefs]: true,
       [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC],
@@ -62,6 +73,7 @@ const Photos = () => {
 
 export default () => {
   const classes = useStyles()
+  const [showDeletedPhotos, setShowDeletedPhotos] = useState(false)
 
   return (
     <>
@@ -73,7 +85,18 @@ export default () => {
         />
       </Helmet>
       <div className={classes.root}>
-        <Photos />
+        <FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={showDeletedPhotos}
+                onChange={() => setShowDeletedPhotos(currentVal => !currentVal)}
+              />
+            }
+            label="Include deleted photos"
+          />
+        </FormControl>
+        <Photos showDeletedPhotos={showDeletedPhotos} />
       </div>
     </>
   )

@@ -44,6 +44,7 @@ import TagUserForm from '../../components/tag-user-form'
 import LikeButton from '../../components/like-button'
 import CommentList from '../../components/comment-list'
 import AddCommentForm from '../../components/add-comment-form'
+import ToggleDeleteBtn from '../../components/toggle-delete-btn'
 
 const useStyles = makeStyles({
   root: {
@@ -278,6 +279,7 @@ export default () => {
     [PhotoFieldNames.isAdult]: isAdult,
     [PhotoFieldNames.userTags]: userTags = [],
     [PhotoFieldNames.userTagPositions]: userTagPositions = [],
+    [PhotoFieldNames.status]: status,
     createdBy
   } = photo
 
@@ -423,6 +425,9 @@ export default () => {
                     photoId={photoId}
                     currentPrivacy={privacy}
                   />
+                </div>
+                <div className={classes.control}>
+                  <ToggleDeleteBtn photoId={photoId} currentStatus={status} />
                 </div>
                 <div className={classes.control}>
                   <ToggleIsAdult photoId={photoId} currentIsAdult={isAdult} />

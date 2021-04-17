@@ -45,6 +45,11 @@ const Photos = () => {
         PhotoFieldNames.privacy,
         Operators.EQUALS,
         0 // public
+      ],
+      [
+        PhotoFieldNames.status,
+        Operators.EQUALS,
+        0 // undeleted
       ]
     ],
     [PhotoFieldNames.createdAt, OrderDirections.DESC]

@@ -126,6 +126,16 @@ export const PhotoFieldNames = {
   createdAt: 'createdAt'
 }
 
+export const PhotoPrivacies = {
+  Public: 0,
+  Private: 1
+}
+
+export const PhotoStatuses = {
+  Active: 0,
+  Deleted: 1
+}
+
 export const LikeFieldNames = {
   photo: 'photo',
   createdBy: 'createdBy',

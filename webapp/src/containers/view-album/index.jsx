@@ -68,6 +68,11 @@ const PhotosForAlbum = ({ albumId }) => {
         PhotoFieldNames.privacy,
         Operators.EQUALS,
         0 // public
+      ],
+      [
+        PhotoFieldNames.status,
+        Operators.EQUALS,
+        0 // undeleted
       ]
     ],
     {

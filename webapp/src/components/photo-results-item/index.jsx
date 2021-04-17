@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import LazyLoad from 'react-lazyload'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 import * as routes from '../../routes'
 import { mediaQueryForTabletsOrBelow } from '../../media-queries'
@@ -18,7 +19,8 @@ import ChangeAlbumForm from '../change-album-form'
 import FormattedDate from '../formatted-date'
 import TogglePrivacyBtn from '../toggle-privacy-btn'
 import ToggleIsAdult from '../toggle-is-adult'
-import { PhotoFieldNames } from '../../firestore'
+import { PhotoFieldNames, PhotoStatuses, PhotoPrivacies } from '../../firestore'
+import ToggleDeleteBtn from '../toggle-delete-btn'
 
 const useStyles = makeStyles({
   root: {
@@ -30,6 +32,9 @@ const useStyles = makeStyles({
       margin: '0.25rem'
     },
     overflow: 'visible'
+  },
+  deleted: {
+    opacity: 0.5
   },
   landscape: {
     width: '100%',
@@ -127,6 +132,7 @@ export default ({
     albums = [],
     [PhotoFieldNames.privacy]: privacy,
     [PhotoFieldNames.isAdult]: isAdult,
+    [PhotoFieldNames.status]: status,
     createdAt,
     createdBy
   }
@@ -140,7 +146,9 @@ export default ({
 
   return (
     <Card
-      className={`${classes.root} ${isOwner ? classes.owner : ''}`}
+      className={`${classes.root} ${isOwner ? classes.owner : ''} ${
+        status === PhotoStatuses.Deleted ? classes.deleted : ''
+      }`}
       ref={cardRef}>
       <CardActionArea className={classes.actionArea}>
         <Link
@@ -198,16 +206,18 @@ export default ({
               />
             </div>
             <div className={classes.control}>
+              <ToggleDeleteBtn photoId={id} currentStatus={status} hideLabel />
+            </div>
+            <div className={classes.control}>
               <ToggleIsAdult photoId={id} currentIsAdult={isAdult} hideLabel />
             </div>
           </div>
         </div>
       )}
-      {privacy === 1 ? (
-        <div className={classes.icons}>
-          <VisibilityOffIcon />
-        </div>
-      ) : null}
+      <div className={classes.icons}>
+        {privacy === PhotoPrivacies.Private ? <VisibilityOffIcon /> : null}
+        {status === PhotoStatuses.Deleted ? <DeleteIcon /> : null}
+      </div>
     </Card>
   )
 }
