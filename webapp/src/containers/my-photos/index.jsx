@@ -50,7 +50,7 @@ const Photos = ({ showDeletedPhotos }) => {
         : [[PhotoFieldNames.status, Operators.EQUALS, PhotoStatuses.Active]]
     ),
     {
-      [options.populateRefs]: true,
+      [options.populateRefs]: false,
       [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC],
       [options.subscribe]: true
     }

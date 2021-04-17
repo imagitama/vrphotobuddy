@@ -52,7 +52,8 @@ const Photos = () => {
         0 // undeleted
       ]
     ],
-    [PhotoFieldNames.createdAt, OrderDirections.DESC]
+    [PhotoFieldNames.createdAt, OrderDirections.DESC],
+    false
   )
   const classes = useStyles()
 
