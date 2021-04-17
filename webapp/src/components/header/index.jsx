@@ -107,6 +107,9 @@ const useStyles = makeStyles({
   },
   homepage: {
     top: '100%'
+  },
+  beta: {
+    textTransform: 'uppercase'
   }
 })
 
@@ -132,6 +135,7 @@ export default () => {
           className={classes.logo}>
           VR Photo Buddy <img src={logoUrl} alt="Logo" />
         </Link>
+        <span className={classes.beta}>Beta</span>
       </div>
 
       <div className={classes.searchBar}>

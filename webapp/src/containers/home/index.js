@@ -10,7 +10,12 @@ import useDatabaseQuery, {
   Operators
 } from '../../hooks/useDatabaseQuery'
 
-import { CollectionNames, PhotoFieldNames } from '../../firestore'
+import {
+  CollectionNames,
+  PhotoFieldNames,
+  PhotoPrivacies,
+  PhotoStatuses
+} from '../../firestore'
 import PhotoResults from '../../components/photo-results'
 import Button from '../../components/button'
 import * as routes from '../../routes'
@@ -18,6 +23,11 @@ import * as routes from '../../routes'
 const useStyles = makeStyles({
   title: {
     padding: '5rem 0 0',
+    textAlign: 'center'
+  },
+  betaMessage: {
+    fontSize: '150%',
+    padding: '2.5rem',
     textAlign: 'center'
   },
   controls: {
@@ -32,11 +42,8 @@ export default () => {
   const [, , results] = useDatabaseQuery(
     CollectionNames.Photos,
     [
-      [
-        PhotoFieldNames.privacy,
-        Operators.EQUALS,
-        0 // public
-      ]
+      [PhotoFieldNames.privacy, Operators.EQUALS, PhotoPrivacies.Public],
+      [PhotoFieldNames.status, Operators.EQUALS, PhotoStatuses.Active]
     ],
     {
       [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC],
@@ -71,6 +78,10 @@ export default () => {
           Automatically upload and tweet photos from VRChat, ChilloutVR and
           NeosVR
         </h1>
+        <div className={classes.betaMessage}>
+          Beta - this app is a work in progress and all content on the site is
+          not filtered and may contain NSFW or offensive content
+        </div>
         <div className={classes.controls}>
           <Button size="large" icon={<GetAppIcon />} isDisabled>
             Download App
