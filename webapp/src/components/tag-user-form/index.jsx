@@ -34,14 +34,7 @@ const useStyles = makeStyles({
     }
   },
   tagging: {
-    cursor: 'pointer',
-    '& $currentTags': {
-      opacity: 1
-    }
-  },
-  currentTags: {
-    opacity: 0,
-    transition: 'all 100ms'
+    cursor: 'pointer'
   },
   tagBox: {
     position: 'absolute',
@@ -277,6 +270,7 @@ export default ({
   photoId,
   currentTags,
   currentTagPositions,
+  showTags = false,
   isTagging = false,
   canEdit = false,
   onDone,
@@ -340,24 +334,17 @@ export default ({
 
     containerRef.current.addEventListener('click', onClick)
 
-    return () => containerRef.current.removeEventListener('click', onClick)
+    return () => {
+      if (containerRef.current) {
+        containerRef.current.removeEventListener('click', onClick)
+      }
+    }
   }, [isTagging])
 
   return (
-    <div
-      className={`${classes.root} ${isTagging ? classes.tagging : ''}`}
-      ref={containerRef}>
-      <div className={classes.status}>
-        {isSaving
-          ? 'Saving...'
-          : isSaveSuccess
-          ? 'Saved'
-          : isSaveError
-          ? 'Error'
-          : ''}
-      </div>
-      <div className={classes.currentTags}>
-        {currentTags.map((vrchatUsername, idx) => (
+    <>
+      {showTags &&
+        currentTags.map((vrchatUsername, idx) => (
           <TagBox
             vrchatUsername={vrchatUsername}
             positionX={currentTagPositions[idx][UserTagFieldNames.positionX]}
@@ -376,29 +363,43 @@ export default ({
             }
           />
         ))}
-      </div>
-      {isTagging && newTag && (
-        <TagBox
-          positionX={newTag.positionX}
-          positionY={newTag.positionY}
-          onDone={newUsername => {
-            if (!newUsername) {
-              return
-            }
-
-            onSaveBtnClick(
-              currentTags.concat([newUsername]),
-              currentTagPositions.concat([
-                {
-                  [UserTagFieldNames.positionX]: newTag.positionX,
-                  [UserTagFieldNames.positionY]: newTag.positionY
+      {isTagging && (
+        <div
+          className={`${classes.root} ${isTagging ? classes.tagging : ''}`}
+          ref={containerRef}>
+          <div className={classes.status}>
+            {isSaving
+              ? 'Saving...'
+              : isSaveSuccess
+              ? 'Saved'
+              : isSaveError
+              ? 'Error'
+              : ''}
+          </div>
+          {newTag && (
+            <TagBox
+              positionX={newTag.positionX}
+              positionY={newTag.positionY}
+              onDone={newUsername => {
+                if (!newUsername) {
+                  return
                 }
-              ])
-            )
-          }}
-          onCancel={onCancel}
-        />
+
+                onSaveBtnClick(
+                  currentTags.concat([newUsername]),
+                  currentTagPositions.concat([
+                    {
+                      [UserTagFieldNames.positionX]: newTag.positionX,
+                      [UserTagFieldNames.positionY]: newTag.positionY
+                    }
+                  ])
+                )
+              }}
+              onCancel={onCancel}
+            />
+          )}
+        </div>
       )}
-    </div>
+    </>
   )
 }

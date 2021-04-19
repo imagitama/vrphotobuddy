@@ -45,6 +45,10 @@ import LikeButton from '../../components/like-button'
 import CommentList from '../../components/comment-list'
 import AddCommentForm from '../../components/add-comment-form'
 import ToggleDeleteBtn from '../../components/toggle-delete-btn'
+import {
+  mediaQueryForMobiles,
+  mediaQueryForTabletsOrBelow
+} from '../../media-queries'
 
 const useStyles = makeStyles({
   root: {
@@ -69,6 +73,12 @@ const useStyles = makeStyles({
     maxWidth: '1500px',
     '& img': {
       width: '100%'
+    },
+    [mediaQueryForTabletsOrBelow]: {
+      padding: '0 50px'
+    },
+    [mediaQueryForMobiles]: {
+      padding: '0 10px'
     }
   },
   photoWrapper: {
@@ -78,11 +88,12 @@ const useStyles = makeStyles({
     width: '100px',
     position: 'absolute',
     top: '50%',
-    transform: 'translateX(-25%)',
+    transform: 'translateY(-50%)',
     cursor: 'pointer',
     '& svg': {
       fontSize: '500%'
-    }
+    },
+    zIndex: 100
   },
   prev: {
     left: 0
@@ -236,8 +247,9 @@ export default () => {
   const classes = useStyles()
   const [isEditorVisible, setIsEditorVisible] = useState(false)
   const { push } = useHistory()
-  const photoContainerRef = useRef()
+  const photoWrapperRef = useRef()
   const [isTaggingUser, setIsTaggingUser] = useState(false)
+  const [showTags, setShowTags] = useState(false)
 
   const prevId = getPrevId(photoId, specialResult)
   const nextId = getNextId(photoId, specialResult)
@@ -246,6 +258,25 @@ export default () => {
     nextId !== null && push(routes.viewPhotoWithVar.replace(':photoId', nextId))
   const goPrev = () =>
     prevId !== null && push(routes.viewPhotoWithVar.replace(':photoId', prevId))
+
+  useEffect(() => {
+    if (isLoading) {
+      return
+    }
+
+    const onHover = () => setShowTags(true)
+    const onDeHover = () => setShowTags(false)
+
+    photoWrapperRef.current.addEventListener('mouseover', onHover)
+    photoWrapperRef.current.addEventListener('mouseleave', onDeHover)
+
+    return () => {
+      if (photoWrapperRef.current) {
+        photoWrapperRef.current.removeEventListener('mouseover', onHover)
+        photoWrapperRef.current.removeEventListener('mouseleave', onDeHover)
+      }
+    }
+  }, [isLoading])
 
   useEffect(() => {
     const handler = e => {
@@ -325,7 +356,7 @@ export default () => {
               <ChevronRightIcon />
             </div>
           )}
-          <div className={classes.photoWrapper}>
+          <div className={classes.photoWrapper} ref={photoWrapperRef}>
             <img
               src={placeholderUrl}
               className={classes.placeholder}
@@ -341,6 +372,7 @@ export default () => {
               isTagging={isTaggingUser}
               currentTags={userTags}
               currentTagPositions={userTagPositions}
+              showTags={showTags}
               canEdit={hasPermissionToEdit}
               onDone={() => setIsTaggingUser(false)}
               onCancel={() => setIsTaggingUser(false)}
