@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum'
 
 import useUserRecord from '../../hooks/useUserRecord'
@@ -47,11 +47,7 @@ export default ({
       [options.populateRefs]: false
     }
   )
-  const [isSaving, isSaveSuccess, isSaveError, save] = useDatabaseSave(
-    CollectionNames.Photos,
-    photoId
-  )
-  const [newAlbumIds, setNewAlbumIds] = useState([])
+  const [isSaving, , , save] = useDatabaseSave(CollectionNames.Photos, photoId)
 
   const updateAlbumsForPhoto = async albumIdAddedOrRemoved => {
     try {

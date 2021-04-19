@@ -46,7 +46,7 @@ export default () => {
       [PhotoFieldNames.status, Operators.EQUALS, PhotoStatuses.Active]
     ],
     {
-      [options.populateRefs]: false,
+      [options.populateRefs]: true,
       [options.orderBy]: [PhotoFieldNames.createdAt, OrderDirections.DESC],
       [options.limit]: 5,
       [options.subscribe]: true

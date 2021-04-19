@@ -48,11 +48,13 @@ export default ({
           }
         }}>
         {options.length ? (
-          options.map(({ value, label }) => (
+          options.map(({ value, label, isSelected }) => (
             <MenuItem key={value} onClick={() => onClickWithValue(value)}>
               <span>
                 {label || '(no label)'}{' '}
-                {selectedValues.includes(value) ? <CheckIcon /> : null}
+                {selectedValues.includes(value) || isSelected ? (
+                  <CheckIcon />
+                ) : null}
               </span>
             </MenuItem>
           ))

@@ -53,7 +53,7 @@ const Photos = () => {
       ]
     ],
     [PhotoFieldNames.createdAt, OrderDirections.DESC],
-    false
+    true
   )
   const classes = useStyles()
 

@@ -6,14 +6,29 @@ const useStyles = makeStyles({
   root: { marginTop: '0.5rem', display: 'flex', flexWrap: 'wrap' }
 })
 
-export default ({ photos }) => {
+export default ({
+  photos,
+  isBulkEditing = false,
+  selectedPhotoIds = [],
+  onChangeId
+}) => {
   const classes = useStyles()
 
   return (
     <div className={classes.root}>
-      {photos.map(photo => (
-        <PhotoResultsItem key={photo.id} photo={photo} />
-      ))}
+      {photos.map(photo => {
+        const isSelected =
+          selectedPhotoIds && selectedPhotoIds.includes(photo.id)
+        return (
+          <PhotoResultsItem
+            key={photo.id}
+            photo={photo}
+            isBulkEditing={isBulkEditing}
+            isSelected={isSelected}
+            onChange={() => onChangeId(photo.id, !isSelected)}
+          />
+        )
+      })}
     </div>
   )
 }

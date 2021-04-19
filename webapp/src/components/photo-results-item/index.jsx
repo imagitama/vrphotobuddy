@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import LazyLoad from 'react-lazyload'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import DeleteIcon from '@material-ui/icons/Delete'
+import Checkbox from '@material-ui/core/Checkbox'
 
 import * as routes from '../../routes'
 import { mediaQueryForTabletsOrBelow } from '../../media-queries'
@@ -135,7 +136,10 @@ export default ({
     [PhotoFieldNames.status]: status,
     createdAt,
     createdBy
-  }
+  },
+  isSelected = false,
+  onChange,
+  isBulkEditing = false
 }) => {
   const classes = useStyles()
   const cardRef = useRef()
@@ -153,7 +157,14 @@ export default ({
       <CardActionArea className={classes.actionArea}>
         <Link
           to={routes.viewPhotoWithVar.replace(':photoId', id)}
-          className={classes.link}>
+          className={classes.link}
+          onClick={e => {
+            if (isBulkEditing) {
+              onChange()
+              e.preventDefault()
+              return false
+            }
+          }}>
           <LazyLoad width={320} height={240}>
             <div className={`${classes.imageWrapper}`}>
               <img
@@ -185,7 +196,7 @@ export default ({
           </div>
         </Link>
       </CardActionArea>
-      {isOwner && (
+      {isOwner && isBulkEditing === false && (
         <div
           className={`${classes.controls} ${showControls ? classes.show : ''}`}>
           <div className={classes.controlItems}>
@@ -212,6 +223,11 @@ export default ({
               <ToggleIsAdult photoId={id} currentIsAdult={isAdult} hideLabel />
             </div>
           </div>
+        </div>
+      )}
+      {isBulkEditing && (
+        <div className={`${classes.controls} ${classes.show}`}>
+          <Checkbox checked={isSelected} onChange={onChange} />
         </div>
       )}
       <div className={classes.icons}>
