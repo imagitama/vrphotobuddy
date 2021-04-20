@@ -28,7 +28,7 @@ if (process.env.IS_NODE !== 'true') {
   require('./electron')
 }
 
-const { startWatching } = require('./watch')
+const { startWatching, waitForVrchatToClose } = require('./watch')
 const { authenticate } = require('./auth')
 const storage = require('./storage')
 const { loadConfig } = require('./config')
@@ -45,6 +45,8 @@ async function main() {
     startWatching()
 
     await processUnprocessedPhotos()
+
+    waitForVrchatToClose()
   } catch (err) {
     console.error(err)
     process.exit(1)

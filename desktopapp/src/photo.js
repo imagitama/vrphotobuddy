@@ -128,3 +128,8 @@ const processUnprocessedPhotos = async () => {
   console.info(`finished processing all unprocessed photos`)
 }
 module.exports.processUnprocessedPhotos = processUnprocessedPhotos
+
+const processPhotos = async (photoPaths) => {
+  return Promise.all(photoPaths.map(async path => await processPhoto(path)))
+}
+module.exports.processPhotos = processPhotos
