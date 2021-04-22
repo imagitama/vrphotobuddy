@@ -19,6 +19,7 @@ function App() {
   const [isUploading, setIsUploading] = useState(false)
   const [isUploadSuccess, setIsUploadSuccess] = useState(false)
   const [lastError, setLastError] = useState(null)
+  const [numberOfUploadedPhotos, setNumberOfUploadedPhotos] = useState(0)
 
   useEffect(() => {
     ; (async () => {
@@ -28,6 +29,7 @@ function App() {
         // reset
         setIsUploadSuccess(false)
         setLastError(null)
+        setNumberOfUploadedPhotos(0)
       })
     })()
   }, [])
@@ -51,7 +53,9 @@ function App() {
     try {
       setIsUploading(true)
       setIsUploadSuccess(false)
-      await uploadSelectedPhotos(photos.filter((photo, idx) => selectedPhotoIndexes.includes(idx)))
+      const photosToUpload = photos.filter((photo, idx) => selectedPhotoIndexes.includes(idx))
+      await uploadSelectedPhotos(photosToUpload)
+      setNumberOfUploadedPhotos(photosToUpload.length)
       setPhotos([])
       setSelectedPhotoIndexes([])
       setIsUploading(false)
@@ -64,7 +68,7 @@ function App() {
   }
 
   if (isUploadSuccess) {
-    return `Upload of ${selectedPhotoIndexes.length} photos was a success - you can now close this window`
+    return `Upload of ${numberOfUploadedPhotos} photos was a success - you can now close this window`
   }
 
   if (isUploading) {
@@ -108,7 +112,7 @@ function App() {
           })
           : 'Waiting...'}
         <div className="controls">
-          <Button disabled={!photos.length} onClick={upload}>Upload</Button>
+          <Button disabled={!photos.length} onClick={upload} variant="contained" color="primary">Upload</Button>
         </div>
       </div>
     </ThemeProvider>

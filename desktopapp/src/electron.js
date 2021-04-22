@@ -1,10 +1,10 @@
-const { app, Menu, Tray, BrowserWindow, ipcMain } = require('electron')
+const { app, Menu, Tray } = require('electron')
 const path = require('path')
 const log = require('electron-log')
 const child_process = require('child_process')
 const { addListener } = require('./status')
 const { setItem, keys } = require('./storage')
-const { processPhotos } = require('./photo')
+const { showDialog } = require('./dialog')
 
 Object.assign(console, log.functions)
 
@@ -34,6 +34,10 @@ app.whenReady().then(() => {
     return Menu.buildFromTemplate([
       {
         label: statusText || 'Waiting',
+      },
+      {
+        label: 'Open dialog',
+        click: () => showDialog()
       },
       {
         label: 'Logs...',
@@ -76,55 +80,3 @@ app.on('window-all-closed', (e) => {
   console.info('all renderer windows have been closed')
   e.preventDefault()
 })
-
-let dialogWindow
-
-module.exports.showDialog = async (photos) => {
-  if (dialogWindow) {
-    console.info(`tried to show dialog but it is already visible, telling it about ${photos.length} new photos...`)
-    dialogWindow.webContents.send('new-photos', photos)
-    return
-  }
-
-  dialogWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    resizable: false,
-    movable: true,
-    show: true,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
-
-  dialogWindow.on('close', () => {
-    dialogWindow = null
-  })
-
-  const pathToIndexInRoot = 'renderer/build/index.html'
-  const actualPath = process.env.NODE_ENV === 'development' ? path.resolve(app.getAppPath(), pathToIndexInRoot) : path.resolve(__dirname, '..', pathToIndexInRoot)
-
-  console.info(`loading html file: ${actualPath}`)
-
-  dialogWindow.loadFile(
-    actualPath
-  )
-
-  ipcMain.on('get-photos', (event) => {
-    console.info(`renderer asked for photos - sending ${photos.length} photo paths`)
-    event.sender.send('get-photos-response', photos)
-  })
-
-  ipcMain.on('upload-photos', async (event, photos) => {
-    console.info(`renderer wants to upload ${photos.length} photos`)
-
-    try {
-      await processPhotos(photos)
-
-      event.sender.send('upload-photos-response', true)
-    } catch (err) {
-      event.sender.send('upload-photos-response', false)
-      throw err
-    }
-  })
-}

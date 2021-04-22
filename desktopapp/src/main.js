@@ -33,10 +33,13 @@ const { authenticate } = require('./auth')
 const storage = require('./storage')
 const { loadConfig } = require('./config')
 const { processUnprocessedPhotos } = require('./photo')
+const { setup: setupDialog } = require('./dialog')
 
 async function main() {
   try {
     console.info(`starting up...`)
+
+    setupDialog()
 
     await loadConfig()
 

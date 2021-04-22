@@ -1,6 +1,6 @@
 {
   "name": "vrphotobuddy",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "VR Photo Buddy companion desktop app.",
   "main": "src/main.js",
   "scripts": {
@@ -8,7 +8,9 @@
     "start:emulators": "cross-env VRPHOTOBUDDY_USE_EMULATORS=true IS_NODE=true NODE_ENV=development nodemon --watch src src/main.js",
     "start:electron": "cross-env VRPHOTOBUDDY_USE_EMULATORS=true NODE_ENV=development electron src/main.js",
     "build": "electron-builder -w --x64",
-    "build:renderer": "cd renderer && npm run build"
+    "build:renderer": "cd renderer && npm run build",
+    "build:cpp": "g++ openvr/main.cpp openvr/openvr/bin/win64/openvr_api.dll -o dist/vrphotobuddy-overlay.exe -iquote./",
+    "postbuild:cpp": "copy .\\resources\\icon.png .\\dist\\icon.png && copy .\\openvr\\manifest.vrmanifest .\\dist\\manifest.vrmanifest"
   },
   "author": "",
   "license": "ISC",

@@ -3,9 +3,8 @@ const path = require('path')
 const { promises: fs } = require('fs')
 const findProcess = require('find-process')
 const { getConfig } = require('./config')
-const { showDialog } = require('./electron')
-
-let photosToProcess = []
+const { showDialog, givePhotosToDialog } = require('./dialog')
+const { addPhotoToProcess, getPhotosToProcess } = require('./processing-photos')
 
 const wait = (time) =>
   new Promise((resolve) => setTimeout(() => resolve(), time))
@@ -36,14 +35,18 @@ module.exports.startWatching = () => {
     .on('add', async (filePath) => {
       console.info(`new photo detected: ${filePath}`)
 
-      photosToProcess.push(filePath)
+      addPhotoToProcess(filePath)
+
+      givePhotosToDialog([filePath])
     })
 
   console.info('now watching')
 }
 
+const vrchatProcessName = process.env.NODE_ENV === 'development' ? 'notepad.exe' : 'VRChat.exe'
+
 const checkForVrchat = async () => {
-  const searchResults = await findProcess('name', 'VRChat.exe')
+  const searchResults = await findProcess('name', vrchatProcessName)
 
   if (!searchResults.length) {
     return false
@@ -84,6 +87,8 @@ const waitForVrchatToClose = async () => {
 
     recursivelyWaitForVrchatToClose(async () => {
       console.info('detected vrchat has been closed!')
+
+      const photosToProcess = getPhotosToProcess()
 
       if (photosToProcess.length > 0) {
         console.info('showing dialog...')

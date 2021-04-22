@@ -1,3 +1,8 @@
+# 0.0.7
+
+- fix uploading photos not clearing photos to process
+- added dialog button to tray menu
+
 # 0.0.6
 
 - show dialog on VRChat close asking you which photos you want to upload
